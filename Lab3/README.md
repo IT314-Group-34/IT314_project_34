@@ -1,5 +1,4 @@
-# **IT314 Lab 3: User Stories**
-
+# IT314 Lab 3: User Stories
 
 # **Group 34 Members**
 
@@ -16,6 +15,7 @@
 | 9 | Nandini Parekh | 202001455 |
 | 10 | Amol Patel | 202001456 |
 | 11 | Smit Bhavsar | 202001464 |
+
 
 # User Stories for Functional Requirements:
 
@@ -121,60 +121,46 @@ Back of Card:
 # User Stories for Non-functional Requirements:
 
 1. As a **user**,  I want to be able to **easily navigate and understand the system's interface** so that I can **quickly find the information I need.** 
-    
-    Title: **User-Friendly Interface**
-    Acceptance Criteria:
-    
-    - The interface should be easy to navigate for all types of users, including those with limited technical experience.
-    - The interface should be visually appealing, with clear and concise labeling of all features and functions.
-    - The interface should be consistent across all pages and screens.
+    - Title: **User-Friendly Interface**
+    - Acceptance Criteria:
+        - The interface should be easy to navigate for all types of users, including those with limited technical experience.
+        - The interface should be visually appealing, with clear and concise labeling of all features and functions.
+        - The interface should be consistent across all pages and screens.
 2. As a **system administrator**, I want **the system to be scalable** so that we can **easily add new features and improve existing ones as needed.**
-    
-    Title: **Scalability**
-    Acceptance Criteria:
-    
-    - The system should be able to handle an increase in the number of users and data without any major performance issues.
-    - The system should be designed in a modular way to allow for easy addition of new features or modules.
-    - The system should be flexible enough to integrate with other systems or technologies as needed.
+    - Title: **Scalability**
+    - Acceptance Criteria:
+        - The system should be able to handle an increase in the number of users and data without any major performance issues.
+        - The system should be designed in a modular way to allow for easy addition of new features or modules.
+        - The system should be flexible enough to integrate with other systems or technologies as needed.
 3. As a **user**, I want the system to **load quickly and provide fast search results** so that I can **find the information I need in a timely manner.**
-    
-    Title: **Fast Loading**
-    Acceptance Criteria:
-    
-    - The system should load quickly and provide search results in under 2 seconds.
-    - The system should be able to handle high traffic volumes without any significant slowdowns.
+    - Title: **Fast Loading**
+    - Acceptance Criteria:
+        - The system should load quickly and provide search results in under 2 seconds.
+        - The system should be able to handle high traffic volumes without any significant slowdowns.
 4. As a **user**, I want the **system to protect my personal information** and **keep my data secure** so that I can **freely provide my preferences without worrying about privacy**.
-    
-    Title: **Security**
-    Acceptance Criteria:
-    
-    - The system should use industry-standard encryption and security protocols to protect user data.
-    - The system should have a secure login process, including strong password requirements and multi-factor authentication options.
-    - The system should have measures in place to prevent unauthorized access, including intrusion detection and prevention systems.
+    - Title: **Security**
+    - Acceptance Criteria:
+        - The system should use industry-standard encryption and security protocols to protect user data.
+        - The system should have a secure login process, including strong password requirements and multi-factor authentication options.
+        - The system should have measures in place to prevent unauthorized access, including intrusion detection and prevention systems.
 5. As a **user**, I want the system to be **reliable and provide accurate information at all times**, so that **I can trust the information I receive from the system.**
-    
-    Title: **Reliability**
-    Acceptance Criteria:
-    
-    - The system should have a uptime of at least 99%.
-    - The system should provide accurate information about neighborhoods, including location, amenities, and pricing.
-    - The system should be tested for errors and bugs regularly, with any issues addressed promptly.
+    - Title: **Reliability**
+    - Acceptance Criteria:
+        - The system should have a uptime of at least 99%.
+        - The system should provide accurate information about neighborhoods, including location, amenities, and pricing.
+        - The system should be tested for errors and bugs regularly, with any issues addressed promptly.
 6. As a **user**, I want the system to be **compatible with a variety of devices** so that I can **access it from anywhere, regardless of the device I am using.**
-    
-    Title: **Device Compatibility**
-    Acceptance Criteria:
-    
-    - The system should be able to work on all modern browsers and devices, including mobile phones and tablets.
-    - The system should be optimized for different screen sizes and resolutions.
-    - The system should have a responsive design that adjusts to the user's device and screen size.
+    - Title: **Device Compatibility**
+    - Acceptance Criteria:
+        - The system should be able to work on all modern browsers and devices, including mobile phones and tablets.
+        - The system should be optimized for different screen sizes and resolutions.
+        - The system should have a responsive design that adjusts to the user's device and screen size.
 7. As a **system administrator**, I want the system to be **easily maintainable** so that we can **quickly fix bugs and make updates as needed to ensure the system's functionality and user experience.**
-    
-    Title: **Maintainability**
-    Acceptance Criteria:
-    
-    - The system should have clear and concise documentation for all features and functions.
-    - The system should be modular and use standardized code and programming practices.
-    - The system should have a testing and debugging framework in place for easy bug fixes and updates.
+    - Title: **Maintainability**
+    - Acceptance Criteria:
+        - The system should have clear and concise documentation for all features and functions.
+        - The system should be modular and use standardized code and programming practices.
+        - The system should have a testing and debugging framework in place for easy bug fixes and updates.
 
 # Sprints
 
