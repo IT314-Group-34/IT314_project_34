@@ -121,12 +121,12 @@ Few reasons why we have chosen visual studio code over others:
 
 | Measurement Parameter | Count | Low | Average | High | Total |
 | --- | --- | --- | --- | --- | --- |
-| EI | 19 | 3 | 4 | 6 | 57 |
-| EO | 17 | 4 | 5 | 7 | 85 |
-| EQ | 7 | 3 | 4 | 6 | 28 |
-| ILF | 10 | 7 | 10 | 15 | 100 |
-| EIF | 1 | 5 | 7 | 10 | 10 |
-|  |  |  |  | Count Total | 280 |
+| EI | 19 | **3** | 4 | 6 | 57 |
+| EO | 17 | 4 | **5** | 7 | 85 |
+| EQ | 7 | 3 | **4** | 6 | 28 |
+| ILF | 10 | 7 | **10** | 15 | 100 |
+| EIF | 1 | 5 | 7 | **10** | 10 |
+|  |  |  |  | Count Total | **280** |
 
 # Complexity adjustment factor:
 
