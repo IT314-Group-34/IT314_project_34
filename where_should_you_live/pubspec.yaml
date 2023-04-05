@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   responsive_builder: ^0.1.4
+  flutter_svg: ^0.22.0
 
 dev_dependencies:
   flutter_test:
