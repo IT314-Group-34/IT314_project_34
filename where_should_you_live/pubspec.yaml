@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  responsive_builder: ^0.1.4
 
 dev_dependencies:
   flutter_test:
@@ -18,3 +19,14 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+
+assets:
+  - assets/Asset 1.svg
+  - assets/Cloud 2.svg
+  - assets/Cloud 1.svg
+
+fonts:
+  - family: Segoe UI
+    fonts:
+      - asset: assets/Segoe UI.ttf
