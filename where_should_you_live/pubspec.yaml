@@ -9,8 +9,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  responsive_builder: ^0.1.4
-  flutter_svg: ^0.22.0
+  responsive_builder: ^0.6.4
+  flutter_svg: ^2.0.4
+  liquid_swipe: ^3.1.0
+  google_fonts: ^4.0.3
+  flutter_native_splash: ^2.2.19
+  get: ^4.6.5
+
 
 dev_dependencies:
   flutter_test:
