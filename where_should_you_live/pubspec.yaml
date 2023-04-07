@@ -9,8 +9,28 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  responsive_builder: ^0.1.4
-  flutter_svg: ^0.22.0
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.2
+  # state management
+  provider: ^6.0.5
+  flutter_bloc: ^8.1.2
+  # http
+  http: ^0.13.1
+  # utils
+  flutter_svg: ^1.1.5
+  # flip_card: ^0.6.0
+  sizer: ^2.0.15
+  connectivity_plus: ^2.3.7
+  url_launcher: ^6.1.2
+  carousel_slider: ^4.0.0
+  animated_text_kit: ^4.2.1
+  scrollable_positioned_list: ^0.3.5
+  # web related
+  # flutter_html: any
+  # url_strategy: ^0.2.0
+  universal_html: ^2.0.4
+  bloc: ^8.1.1
+  connectivity: ^3.0.6
 
 dev_dependencies:
   flutter_test:
@@ -21,13 +41,26 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/imgs/
+    - assets/icons/
+    - assets/gif/
 
-assets:
-  - assets/Asset 1.svg
-  - assets/Cloud 2.svg
-  - assets/Cloud 1.svg
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/montserrat/montserrat.ttf
 
-fonts:
-  - family: Segoe UI
-    fonts:
-      - asset: assets/Segoe UI.ttf
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/poppins/Poppins-Regular.ttf
+        - asset: assets/fonts/poppins/Poppins-Light.ttf
+        - asset: assets/fonts/poppins/Poppins-Bold.ttf
+          weight: 900
+        - asset: assets/fonts/poppins/Poppins-Medium.ttf
+          weight: 300
+        - asset: assets/fonts/poppins/Poppins-SemiBold.ttf
+          weight: 500
+        - asset: assets/fonts/poppins/Poppins-Italic.ttf
+          style: italic
