@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:where_should_you_live/firebase_options.dart';
+import 'forgotPassword.dart';
 import './signup.dart';
 import './login.dart';
 
@@ -8,10 +9,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MaterialApp(
-    home: MyHomePage(),
+    home: const MyHomePage(),
     routes: {
       '/signup': (context) => const signUp(),
       '/login': (context) => const Login(),
+      '/home': (context) => const MyHomePage(),
+      '/forgotPassword': (context) => ForgotPasswordScreen(),
     },
   ));
 }
@@ -40,11 +43,13 @@ class MainApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatelessWidget {
+  const MyHomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Homepage'),
+        title: const Text('Homepage'),
       ),
       body: Center(
         child: Column(
@@ -57,9 +62,9 @@ class MyHomePage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const signUp()),
                 )
               },
-              child: Text('Sign Up'),
+              child: const Text('Sign Up'),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () => {
                 Navigator.push(
@@ -67,7 +72,7 @@ class MyHomePage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const Login()),
                 ),
               },
-              child: Text('Login'),
+              child: const Text('Login'),
             ),
           ],
         ),
