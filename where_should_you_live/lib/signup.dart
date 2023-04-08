@@ -1,27 +1,53 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'auth.dart';
+import 'firebase_options.dart';
+import 'package:flutter_pw_validator/flutter_pw_validator.dart';
+import 'main.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const signUp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+// ignore: camel_case_types
+class signUp extends StatefulWidget {
+  const signUp({Key? key}) : super(key: key);
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<signUp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<signUp> {
+  late TextEditingController _nameController;
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
+  late TextEditingController _confirmPasswordController;
+
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  initState() {
+    _nameController = TextEditingController();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+    _confirmPasswordController = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
   bool passenable = true;
-  final formKey = GlobalKey<FormState>();
-  final TextEditingController _pass = TextEditingController();
-  final TextEditingController _confirmPass = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return MaterialApp(
       home: Scaffold(
-        key: _scaffoldKey,
         appBar: AppBar(
           title: const Text('Signup Screen'),
         ),
@@ -29,155 +55,173 @@ class _MyAppState extends State<MyApp> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text(
-              'Sign Up',
-              style: TextStyle(
-                fontSize: 35,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 30),
+              padding: EdgeInsets.symmetric(
+                  vertical: MediaQuery.of(context).size.height * 0.025),
               child: Form(
-                  key: formKey,
+                  key: _formKey,
                   child: Column(
                     children: [
                       Center(
                         child: MaterialButton(
-                          minWidth: 200,
-                          onPressed: () {},
+                          minWidth: MediaQuery.of(context).size.width * 0.4,
+                          onPressed: () {
+                            signInWithGoogle(context);
+                          },
                           color: Colors.blue,
+                          height: MediaQuery.of(context).size.height * 0.06,
                           textColor: Colors.white,
                           child: const Text('Sign Up With Google'),
                         ),
                       ),
-                      const SizedBox(
-                        height: 30,
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.025,
                       ),
-                      const SizedBox(
-                        width: 300,
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.4,
                         child: Divider(
                           color: Colors.black,
-                          height: 25,
+                          height: MediaQuery.of(context).size.height * 0.04,
                           thickness: 2,
                           indent: 5,
                           endIndent: 5,
                         ),
                       ),
-                      const SizedBox(
-                        height: 30,
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.02,
                       ),
                       SizedBox(
-                        width: 300,
+                        width: MediaQuery.of(context).size.width * 0.4,
                         child: TextFormField(
-                            keyboardType: TextInputType.name,
-                            decoration: const InputDecoration(
-                              labelText: 'Full Name',
-                              hintText: 'Enter Name',
-                              prefixIcon: Icon(Icons.text_fields),
-                              border: OutlineInputBorder(),
-                            ),
-                            onChanged: (String value) {},
-                            validator: (value) {
-                              if (value!.isEmpty ||
-                                  !RegExp(r'^[a-z A-Z]+$').hasMatch(value!)) {
-                                return "Please Enter Correct Name";
-                              } else {
-                                return null;
-                              }
-                            }),
-                      ),
-                      const SizedBox(
-                        height: 30,
+                          controller: _nameController,
+                          keyboardType: TextInputType.name,
+                          decoration: const InputDecoration(
+                            labelText: 'Full Name',
+                            hintText: 'Enter Name',
+                            prefixIcon: Icon(Icons.text_fields),
+                            border: OutlineInputBorder(),
+                          ),
+                          onChanged: (String value) {},
+                          validator: (value) {
+                            return value!.isEmpty
+                                ? 'Please Enter Full Name'
+                                : null;
+                          },
+                        ),
                       ),
                       SizedBox(
-                        width: 300,
-                        child: TextFormField(
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: const InputDecoration(
-                              labelText: 'Email Address',
-                              hintText: 'Enter Email Id',
-                              prefixIcon: Icon(Icons.email),
-                              border: OutlineInputBorder(),
-                            ),
-                            onChanged: (String value) {},
-                            validator: (value) {
-                              if (value!.isEmpty ||
-                                  !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}')
-                                      .hasMatch(value!)) {
-                                return "Please Enter Email Address";
-                              } else {
-                                return null;
-                              }
-                            }),
-                      ),
-                      const SizedBox(
-                        height: 30,
+                        height: MediaQuery.of(context).size.height * 0.02,
                       ),
                       SizedBox(
-                        width: 300,
+                        width: MediaQuery.of(context).size.width * 0.4,
                         child: TextFormField(
-                            //if passenable == true, show **, else show password character
-                            controller: _pass,
-                            decoration: const InputDecoration(
-                                hintText: "Enter Password",
-                                labelText: "Password",
-                                prefixIcon: Icon(Icons.password),
-                                border: OutlineInputBorder()
-                                //eye icon if passenable = true, else, Icon is ***__
-                                ),
-                            validator: (value) {
-                              if (value!.isEmpty ||
-                                  !RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
-                                      .hasMatch(value!)) {
-                                return "At Least 8 character Format : Abcd123@";
-                              } else {
-                                return null;
-                              }
-                            }),
-                      ),
-                      const SizedBox(
-                        height: 30,
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: const InputDecoration(
+                            labelText: 'Email Address',
+                            hintText: 'Enter Email Id',
+                            prefixIcon: Icon(Icons.email),
+                            border: OutlineInputBorder(),
+                          ),
+                          onChanged: (String value) {},
+                          validator: (value) {
+                            return value!.isEmpty
+                                ? 'Please Enter Email Id'
+                                : null;
+                          },
+                        ),
                       ),
                       SizedBox(
-                        width: 300,
+                        height: MediaQuery.of(context).size.height * 0.02,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.4,
                         child: TextFormField(
-                            //if passenable == true, show **, else show password character
-                            obscureText: passenable,
-                            controller: _confirmPass,
-                            decoration: const InputDecoration(
-                              hintText: "Re-Enter Password",
-                              labelText: "Confirm Password",
-                              prefixIcon: Icon(Icons.lock),
-                              border: OutlineInputBorder(),
-                              //eye icon if passenable = true, else, Icon is ***__
-                            ),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Please Enter Same as Password";
-                              } else if (value != _pass.text) {
-                                return "Please Enter Same as Password";
-                              } else {
-                                return null;
-                              }
-                            }),
+                          controller: _passwordController,
+                          obscureText: passenable,
+                          decoration: const InputDecoration(
+                            hintText: "Enter Password",
+                            labelText: "Password",
+                            prefixIcon: Icon(Icons.lock),
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'This field is required';
+                            }
+                            if (value.trim().length < 8) {
+                              return 'Password must be at least 8 characters in length';
+                            }
+                            // Return null if the entered password is valid
+                            return null;
+                          },
+                        ),
                       ),
-                      const SizedBox(
-                        height: 30,
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.02,
                       ),
-                      MaterialButton(
-                        minWidth: 100,
-                        onPressed: () {
-                          if (formKey.currentState!.validate()) {
-                            final snackBar =
-                                SnackBar(content: Text('creatin Account'));
-                          }
-                        },
-                        color: Colors.blue,
-                        textColor: Colors.white,
-                        child: const Text('Sign Up'),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        child: TextFormField(
+                          controller: _confirmPasswordController,
+                          obscureText: passenable,
+                          decoration: const InputDecoration(
+                            hintText: "Re-Enter Password",
+                            labelText: "Confirm Password",
+                            prefixIcon: Icon(Icons.lock),
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'This field is required';
+                            }
+
+                            // ignore: unrelated_type_equality_checks
+                            if (value != _passwordController.text) {
+                              return 'Confimation password does not match the entered password';
+                            }
+
+                            return null;
+                          },
+                        ),
                       ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.02,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.3,
+                        child: MaterialButton(
+                          onPressed: () async {
+                            // Validate returns true if the form is valid, or false otherwise.
+                            if (_formKey.currentState!.validate()) {
+                              // If the form is valid, display a snackbar. In the real world,
+                              // you'd often call a server or save the information in a database.
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Processing Data')),
+                              );
+                              await signUpWithEmailAndPassword(
+                                context,
+                                _emailController.text,
+                                _passwordController.text,
+                              );
+                            }
+                          },
+                          color: Colors.blue,
+                          height: MediaQuery.of(context).size.height * 0.06,
+                          textColor: Colors.white,
+                          child: const Text('Sign Up'),
+                        ),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.02,
+                      ),
+                      TextButton(
+                          onPressed: () => {
+                                Navigator.pushReplacementNamed(
+                                    context, '/login'),
+                              },
+                          child: Text('Already have an account?')),
                     ],
                   )),
             )
