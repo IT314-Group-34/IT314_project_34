@@ -81,123 +81,109 @@ class _WishlistPageState extends State<WishlistPage> {
       ),
       body: GridView.count(
         crossAxisCount: screenSize.width > 600 ? 3 : 2,
-        children: _items
-            .map(
-              (item) => Card(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: _items.map((item) {
+          return Card(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: Stack(
+                    children: [
+                      Image.network(
+                        item['url'],
+                        width: screenSize.width,
+                        height: screenSize.width * 9 / 16,
+                        // fit: BoxFit.cover,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: screenSize.height * 0.01),
+                Expanded(
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: screenSize.width * 0.02,
+                      ),
+                      child: Text(
+                        item['text'],
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: Stack(
-                        children: [
-                          Image.network(
-                            item['url'],
-                            width: screenSize.width,
-                            fit: BoxFit.fitWidth,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenSize.width * 0.01,
+                        ),
+                        child: Text(
+                          '\$${item['price']}',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
                           ),
-                          // Positioned(
-                          //   top: screenSize.height * 0.01,
-                          //   right: screenSize.width * 0.01,
-                          //   child: IconButton(
-                          //     icon: Icon(Icons.delete),
-                          //     onPressed: () {
-                          //       setState(() {
-                          //         _items.remove(item);
-                          //       });
-                          //     },
-                          //   ),
-                          // ),
-                        ],
+                        ),
                       ),
                     ),
-                    SizedBox(height: screenSize.height * 0.01),
                     Expanded(
                       child: Center(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: screenSize.width * 0.02,
-                          ),
-                          child: Text(
-                            item['text'],
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: screenSize.width * 0.04,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              children: List.generate(
+                                5,
+                                (index) => Icon(
+                                  index + 1 <= item['rating']
+                                      ? Icons.star
+                                      : index < item['rating']
+                                          ? Icons.star_half
+                                          : Icons.star_border,
+                                  color: Colors.amber,
+                                  size: 16.0,
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: screenSize.width * 0.01,
-                            ),
-                            child: Text(
-                              '\$${item['price']}',
-                              style: TextStyle(
-                                fontSize: screenSize.width * 0.04,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Row(
-                                  children: List.generate(
-                                    5,
-                                    (index) => Icon(
-                                      index + 1 <= item['rating']
-                                          ? Icons.star
-                                          : index < item['rating']
-                                              ? Icons.star_half
-                                              : Icons.star_border,
-                                      color: Colors.amber,
-                                      size: screenSize.width * 0.045,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: screenSize.height * 0.01),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            child: Text('Buy'),
-                          ),
-                        ),
-                        SizedBox(width: screenSize.width * 0.01),
-                        Expanded(
-                          child: IconButton(
-                              icon: Icon(Icons.delete),
-                              onPressed: () {
-                                setState(
-                                  () {
-                                    _items.remove(item);
-                                  },
-                                );
-                              }),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: screenSize.height * 0.02),
                   ],
                 ),
-              ),
-            )
-            .toList(),
+                SizedBox(height: screenSize.height * 0.01),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: Text('Buy'),
+                      ),
+                    ),
+                    SizedBox(width: screenSize.width * 0.01),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _items.remove(item);
+                          });
+                        },
+                        child: Text('Remove'),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: screenSize.height * 0.01),
+              ],
+            ),
+          );
+        }).toList(),
       ),
     );
   }
