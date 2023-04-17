@@ -4,6 +4,7 @@ import 'package:where_should_you_live/firebase_options.dart';
 import 'forgotPassword.dart';
 import './signup.dart';
 import './login.dart';
+import './preference_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +19,20 @@ void main() async {
     },
   ));
 }
+
+class MyPreference extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Preference Page',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: PreferencePage(),
+    );
+  }
+}
+
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
