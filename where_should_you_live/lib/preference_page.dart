@@ -28,12 +28,12 @@ class _PreferencePageState extends State<PreferencePage> {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Please select up to 4 options.'),
-              action: SnackBarAction(
-                label: 'OK',
-                onPressed: () {},
-              ),
-            ),
+                content:
+                    Text('My apologies but you can only select 4 options.'),
+                action: SnackBarAction(
+                  label: 'OK',
+                  onPressed: () {},
+                )),
           );
         }
       }
@@ -44,13 +44,19 @@ class _PreferencePageState extends State<PreferencePage> {
     final bool isChecked = _selectedOptions.contains(option);
 
     return CheckboxListTile(
-      title: Text(option),
+      title: Text(
+        option,
+        style: TextStyle(fontSize: 16),
+      ),
       value: isChecked,
       onChanged: (bool? value) {
         if (value != null) {
           _toggleOption(option);
         }
       },
+      activeColor: Colors.deepPurple,
+      checkColor: Colors.white,
+      controlAffinity: ListTileControlAffinity.leading,
     );
   }
 
@@ -104,23 +110,75 @@ class _PreferencePageState extends State<PreferencePage> {
     }
   }
 
+  void _resetOptions() {
+    setState(() {
+      _selectedOptions.clear();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Preference Page'),
+        backgroundColor: Colors.deepPurple,
       ),
-      body: ListView(
-        children: _options.map((String option) {
-          return _buildOptionCheckbox(option);
-        }).toList(),
+      body: Container(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: Text(
+                'Select your top 4 preferences:',
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+            Expanded(
+              child: ListView(
+                children: _options.map((String option) {
+                  return _buildOptionCheckbox(option);
+                }).toList(),
+              ),
+            ),
+          ],
+        ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          _showConfirmationDialog();
-        },
-        label: Text('Save Preferences'),
-        icon: Icon(Icons.save),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton.extended(
+            label: Text('Save Preferences'),
+            onPressed: () {
+              if (_selectedOptions.length == 0) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Please select at least one option.'),
+                    action: SnackBarAction(
+                      label: 'OK',
+                      onPressed: () {},
+                    ),
+                  ),
+                );
+              } else {
+                _showConfirmationDialog();
+              }
+            },
+            icon: Icon(Icons.save),
+            backgroundColor: Colors.deepPurple,
+          ),
+          SizedBox(width: 10),
+          FloatingActionButton(
+            onPressed: () {
+              setState(() {
+                _selectedOptions.clear();
+              });
+            },
+            child: Icon(Icons.refresh),
+            backgroundColor: Colors.deepPurple,
+          ),
+        ],
       ),
     );
   }
