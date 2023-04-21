@@ -17,8 +17,8 @@
 | 10 | Amol Patel | 202001456 |
 | 11 | Smit Bhavsar | 202001464 |
 
-### log in code
-```
+### Log in code
+```dart
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -97,8 +97,8 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 ```
-#### Test code for log_in 
-```
+#### Test code for Log in
+```dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import './login_page.dart';
