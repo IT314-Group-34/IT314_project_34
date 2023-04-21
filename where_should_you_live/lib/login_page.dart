@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import '../assets/constants/image_strings.dart';
-import '../assets/constants/sizes.dart';
-import '../assets/constants/text_strings.dart';
+import 'package:where_should_you_live/src1/constants/image_strings.dart';
+import 'package:where_should_you_live/src1/constants/sizes.dart';
+import 'package:where_should_you_live/src1/constants/text_strings.dart';
+//import '../assets/constants/image_strings.dart';
+//import '../assets/constants/sizes.dart';
+//import '../assets/constants/text_strings.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
