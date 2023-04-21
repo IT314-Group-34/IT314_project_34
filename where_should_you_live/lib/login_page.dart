@@ -53,6 +53,11 @@ class LoginScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: tFormheight - 20),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                              onPressed: () {}, child: Text(tForgetPassword)),
+                        ),
                       ],
                     ),
                   ),
