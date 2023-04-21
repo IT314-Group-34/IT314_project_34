@@ -44,8 +44,8 @@ class LoginScreen extends StatelessWidget {
                         TextFormField(
                           decoration: const InputDecoration(
                               prefixIcon: Icon(Icons.person_outline_outlined),
-                              labelText: tEmail,
-                              hintText: tEmail,
+                              labelText: tPassword,
+                              hintText: tPassword,
                               border: OutlineInputBorder()),
                         ),
                       ],

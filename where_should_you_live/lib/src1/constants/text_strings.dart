@@ -17,3 +17,4 @@ const String tOnboardingCounterText3 = '3/3';
 const String tLoginTitle = "Welcome Back,";
 const String tLoginSubTitle = "Make it work, make it right, make it fast.";
 const String tEmail = "E-Mail";
+const String tPassword = "Password";
