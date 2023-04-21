@@ -9,18 +9,48 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //const TDefaultSize = 16.0;
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.all(TDefaultSize),
-          child: Column(
-            children: [
-              Image(image: AssetImage(tWelcomeScreenImage)),
-              Text(tLoginTitle,
-                  style: Theme.of(context).textTheme.headlineLarge),
-              Text(tLoginSubTitle,
-                  style: Theme.of(context).textTheme.bodySmall),
-            ],
+    final size = MediaQuery.of(context).size;
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Container(
+            padding: const EdgeInsets.all(TDefaultSize),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Image(
+                    image: AssetImage(tWelcomeScreenImage),
+                    height: size.height * 0.2),
+                Text(tLoginTitle,
+                    style: Theme.of(context).textTheme.headlineLarge),
+                Text(tLoginSubTitle,
+                    style: Theme.of(context).textTheme.bodySmall),
+                Form(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextFormField(
+                          decoration: const InputDecoration(
+                              prefixIcon: Icon(Icons.person_outline_outlined),
+                              labelText: tEmail,
+                              hintText: tEmail,
+                              border: OutlineInputBorder()),
+                        ),
+                        TextFormField(
+                          decoration: const InputDecoration(
+                              prefixIcon: Icon(Icons.person_outline_outlined),
+                              labelText: tEmail,
+                              hintText: tEmail,
+                              border: OutlineInputBorder()),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
