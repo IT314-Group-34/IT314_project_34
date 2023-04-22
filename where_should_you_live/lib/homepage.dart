@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+void main() {
+  runApp(const MyApp());
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
   Widget func({required String url, required String value}) {
@@ -146,6 +150,7 @@ class MyApp extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
+                    flex: 2,
                     child: Column(
                       children: const [
                         Padding(
