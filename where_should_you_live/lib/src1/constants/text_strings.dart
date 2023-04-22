@@ -19,3 +19,4 @@ const String tLoginSubTitle = "Make it work, make it right, make it fast.";
 const String tEmail = "E-Mail";
 const String tPassword = "Password";
 const String tForgetPassword = "Forget Password";
+const String tLogin = "Login";
