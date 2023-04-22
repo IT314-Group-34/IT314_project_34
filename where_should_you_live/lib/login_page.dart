@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:where_should_you_live/src1/constants/image_strings.dart';
 import 'package:where_should_you_live/src1/constants/sizes.dart';
 import 'package:where_should_you_live/src1/constants/text_strings.dart';
+import 'login_footer_widget.dart';
 import 'login_form_widget.dart';
 import 'login_header_widget.dart';
 
@@ -22,17 +23,7 @@ class LoginScreen extends StatelessWidget {
               children: [
                 LoginHeaderWidget(size: size),
                 const LoginForm(),
-                   Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text("OR"),
-                    OutlinedButton.icon(
-                        icon:Image(image :AssetImage(tGoogleLogoImage)),
-                        onPressed: () {},
-                        label: Text(tSignInWithGoogle),
-                    )
-                  ],
-                )
+                LoginFooterWidget(),
               ],
             ),
           ),

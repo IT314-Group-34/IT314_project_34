@@ -21,3 +21,6 @@ const String tPassword = "Password";
 const String tForgetPassword = "Forget Password";
 const String tLogin = "Login";
 const String tSignInWithGoogle = "Sign-In with Google";
+const String tAlreadyHaveAnAccount = "Already have an Account? ";
+const String tSignup = "Signup";
+const String tDontHaveAnAccount = "Don't have an Account? ";
