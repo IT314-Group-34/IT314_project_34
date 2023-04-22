@@ -22,6 +22,17 @@ class LoginScreen extends StatelessWidget {
               children: [
                 LoginHeaderWidget(size: size),
                 const LoginForm(),
+                   Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text("OR"),
+                    OutlinedButton.icon(
+                        icon:Image(image :AssetImage(tGoogleLogoImage)),
+                        onPressed: () {},
+                        label: Text(tSignInWithGoogle),
+                    )
+                  ],
+                )
               ],
             ),
           ),
@@ -30,5 +41,3 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
-
-

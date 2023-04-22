@@ -20,3 +20,4 @@ const String tEmail = "E-Mail";
 const String tPassword = "Password";
 const String tForgetPassword = "Forget Password";
 const String tLogin = "Login";
+const String tSignInWithGoogle = "Sign-In with Google";

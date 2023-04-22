@@ -5,3 +5,4 @@ const String tOnBoardingImage2 =
 const String tOnboardingImage3 =
     'assets/images/on_boarding_images/onboarding_3.png';
 const String tWelcomeScreenImage = 'lib/assets/images/welcome_2.jpg';
+const String tGoogleLogoImage = "assets/logo/google-logo.png";
