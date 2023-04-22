@@ -24,3 +24,5 @@ const String tSignInWithGoogle = "Sign-In with Google";
 const String tAlreadyHaveAnAccount = "Already have an Account? ";
 const String tSignup = "Signup";
 const String tDontHaveAnAccount = "Don't have an Account? ";
+const String tSignUpTitle = "Get On Board!";
+const String tSignUpSubTitle = "Create your profile to start your Journey.";
