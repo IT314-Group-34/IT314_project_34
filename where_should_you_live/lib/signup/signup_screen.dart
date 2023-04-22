@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import '../assets/constants/image_strings.dart';
-import '../assets/constants/sizes.dart';
-import '../assets/constants/text_strings.dart';
+import '../src1/constants/colors.dart';
 import '../src1/constants/image_strings.dart';
 import '../src1/constants/sizes.dart';
 import '../src1/constants/text_strings.dart';
@@ -19,14 +17,38 @@ class SignupScreen extends StatelessWidget {
             padding: const EdgeInsets.all(TDefaultSize),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                FormHeaderWidget(
+              children: [
+              const  FormHeaderWidget(
                   image: tWelcomeScreenImage,
                   title: tSignUpTitle,
                   subTitle: tSignUpSubTitle,
                 ),
-                const LoginForm(),
-                LoginFooterWidget()
+             Container(
+               padding: const EdgeInsets.symmetric(vertical: tFormheight - 10),
+               child: Form(
+                 child: Column(
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   children: [
+                     TextFormField(
+                         decoration: const InputDecoration(
+                           label: Text(tFullName),
+                          border: OutlineInputBorder(),
+                           prefixIcon: Icon(
+                               Icons.person_outline_outlined
+                               //color: tSecondaryColor,
+                           ),
+                          // labelStyle: Textstyle(color:tSecondaryColor),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(width: 2.0 , color: tSecondaryColor)
+                          )
+                        ),
+                     )
+                   ],
+                 ),
+               ),
+             )
+                //const LoginForm(),
+                // LoginFooterWidget()
               ],
             ),
           ),
@@ -35,3 +57,4 @@ class SignupScreen extends StatelessWidget {
     );
   }
 }
+

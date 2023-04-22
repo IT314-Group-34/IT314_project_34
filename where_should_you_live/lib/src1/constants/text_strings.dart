@@ -26,3 +26,4 @@ const String tSignup = "Signup";
 const String tDontHaveAnAccount = "Don't have an Account? ";
 const String tSignUpTitle = "Get On Board!";
 const String tSignUpSubTitle = "Create your profile to start your Journey.";
+const String tFullName = "Full Name";
