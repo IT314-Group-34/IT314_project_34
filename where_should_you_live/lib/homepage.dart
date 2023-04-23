@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class Homepage extends StatelessWidget {
+  const Homepage({Key? key}) : super(key: key);
   Widget func({required String url, required String value}) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 5),
