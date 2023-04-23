@@ -8,6 +8,11 @@ version: 1.0.0+1
 environment:
   sdk: '>=2.19.4 <3.0.0'
 
+publish_to: "none"
+version: 0.1.0
+
+environment:
+  sdk: ">=2.19.3 <3.0.0"
 
 dependencies:
   flutter:
@@ -17,6 +22,11 @@ dependencies:
   liquid_swipe: ^3.1.0
   smooth_page_indicator: ^1.0.1
   google_fonts: ^4.0.3
+  firebase_core: ^2.9.0
+  firebase_auth: ^4.4.0
+  cloud_firestore: ^4.5.0
+  google_sign_in: ^6.0.2
+  flutter_pw_validator: ^1.5.0
 
 dev_dependencies:
   flutter_test:
