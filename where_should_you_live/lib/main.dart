@@ -3,6 +3,9 @@ import './signup.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import './log_in.dart';
+
+
 
 
 void main() {
@@ -15,6 +18,23 @@ void main() {
       '/signup': (context) => const MyApp(),
     },
   ));
+}
+
+class log_in extends StatelessWidget {
+  const log_in ({Key? key}) : super(key: key);
+
+  static const String _title = 'Sign in page';
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: _title,
+      home: Scaffold(
+        appBar: AppBar(title: const Text(_title)),
+        body: LoginPage(),
+      ),
+    );
+  }
 }
 
 // Define a function to save user profile data to Firestore
