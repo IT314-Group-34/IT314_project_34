@@ -3,18 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'search_service.dart';
 
-enum ExerciseFilter {
-  filter_1,
-  filter_2,
-  filter_3,
-  filter_4,
-  filter_5,
-  filter_6,
-  filter_7,
-  filter_8,
-  filter_9
-}
-
 class SearchPage extends StatefulWidget {
   @override
   _SearchPageState createState() => _SearchPageState();
@@ -32,9 +20,12 @@ class _SearchPageState extends State<SearchPage> {
   final SearchService _searchService = SearchService();
   List<DocumentSnapshot> _neighbourhoods = [];
 
-  List<String> filterSearchTerms({
+// The currently selected filters
+Set<ExerciseFilter> _selectedFilters = {};
+
+List<String> filterSearchTerms({
     required String? filter,
-  }) {
+}) {
     if (filter != null && filter.isNotEmpty) {
       // Reversed because we want the last added items to appear first in the UI
       return _searchHistory.reversed
@@ -43,12 +34,14 @@ class _SearchPageState extends State<SearchPage> {
     } else {
       return _searchHistory.reversed.toList();
     }
-  }
+}
 
 // Call this method when the user submits a search query
 void _searchNeighbourhoods(String criteria) async {
-    final QuerySnapshot result =
-        await _searchService.searchByCriteria(criteria);
+    final QuerySnapshot result = await _searchService.searchByCriteria(
+      criteria,
+      filters: _selectedFilters.toList(),
+    );
     setState(() {
       _neighbourhoods = result.docs;
     });
@@ -63,5 +56,31 @@ void initState() {
 @override
 Widget build(BuildContext context) {
     // Build your UI here using the `_neighbourhoods` list to display the search results
+
+return Scaffold(
+      body: Column(
+        children: [
+          // Add a row of toggle buttons that allow the user to select which filters to apply
+          Row(
+            children: ExerciseFilter.values.map((filter) {
+              return FilterChip(
+                label: Text(filter.toString().split('.').last),
+                selected: _selectedFilters.contains(filter),
+                onSelected: (isSelected) {
+                  setState(() {
+                    if (isSelected) {
+                      _selectedFilters.add(filter);
+                    } else {
+                      _selectedFilters.remove(filter);
+                    }
+                  });
+                },
+              );
+            }).toList(),
+          ),
+          // Add additional widgets here to display the search results
+        ],
+      ),
+    );
 }
 }
