@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'lib/login_page.dart';
+import 'lib/login.dart';
 
 void main() {
   testWidgets('LoginPage should log in with correct credentials', (WidgetTester tester) async {
