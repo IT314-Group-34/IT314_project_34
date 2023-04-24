@@ -1,11 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
- 
- 
 import 'package:where_should_you_live/firebase_options.dart';
 import 'forgotPassword.dart';
-import './signup.dart';
+import './sign_up.dart';
 import './login.dart';
 import './preference_page.dart';
 
@@ -35,7 +32,6 @@ class MyPreference extends StatelessWidget {
     );
   }
 }
-
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
