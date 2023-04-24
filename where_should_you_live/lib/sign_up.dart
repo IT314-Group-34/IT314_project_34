@@ -17,7 +17,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Where You Should Live?'),
+        title: Text('Where You Should Live.'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -26,7 +26,7 @@ class _SignUpPageState extends State<SignUpPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Sign Up Here!',
+                'Create an account',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 24.0,
@@ -59,11 +59,18 @@ class _SignUpPageState extends State<SignUpPage> {
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Please enter your username';
+                        } else if (value.contains(' ')) {
+                          return 'User Name should not contain space.';
+                        } else if (!value
+                            .contains(new RegExp(r'^[a-z0-9]+$'))) {
+                          return 'Username must contain only lowercase letters';
+                        } else if (!RegExp(r'\d').hasMatch(value)) {
+                          return 'Username must contain at least one number';
                         }
                         return null;
                       },
                       onSaved: (value) {
-// save the value to the username variable
+                        // save the value to the username variable
                       },
                     ),
                     const SizedBox(height: 16),
@@ -87,6 +94,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Please enter your Email';
+                        } else if (value.contains(' ')) {
+                          return 'Email should not contain space.';
                         }
                         if (!value.contains('@')) {
                           return 'Please enter a valid email address';
@@ -117,20 +126,25 @@ class _SignUpPageState extends State<SignUpPage> {
                       keyboardType: TextInputType.text,
                       textInputAction: TextInputAction.done,
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
+                        if (value!.isEmpty) {
                           return 'Please enter your password';
-                        }
-                        if (value.length < 8) {
-                          return 'Password must be at least 8 characters long';
-                        }
-                        if (!RegExp(r'[A-Z]').hasMatch(value)) {
-                          return 'Password must contain at least one uppercase letter';
-                        }
-                        if (!RegExp(r'[0-9]').hasMatch(value)) {
-                          return 'Password must contain at least one number';
-                        }
-                        if (!RegExp(r'[!@#\$&*~]').hasMatch(value)) {
-                          return 'Password must contain at least one special character (!,@,#,\$,&,*,~)';
+                        } else if (value.contains(' ')) {
+                          return 'Password should not contain any spaces';
+                        } else if (value.length < 12) {
+                          return 'Password must be at least 12 characters long';
+                        } else if (!RegExp(
+                                r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{12,}$')
+                            .hasMatch(value)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text(
+                                    'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (!@#\$&*~).'),
+                                action: SnackBarAction(
+                                  label: 'OK',
+                                  onPressed: () {},
+                                )),
+                          );
+                          return null;
                         }
                         return null;
                       },
