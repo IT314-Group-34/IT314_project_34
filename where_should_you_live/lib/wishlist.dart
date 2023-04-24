@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'main.dart';
 
 class WishlistPage extends StatefulWidget {
   @override
@@ -81,6 +82,8 @@ class _WishlistPageState extends State<WishlistPage> {
       ),
       body: GridView.count(
         crossAxisCount: screenSize.width > 600 ? 3 : 2,
+
+        // childAspectRatio: screenSize.width / screenSize.height,
         children: _items.map((item) {
           return Card(
             child: Column(
@@ -92,8 +95,8 @@ class _WishlistPageState extends State<WishlistPage> {
                       Image.network(
                         item['url'],
                         width: screenSize.width,
-                        height: screenSize.width * 9 / 16,
-                        // fit: BoxFit.cover,
+                        height: screenSize.width,
+                        fit: BoxFit.fill,
                       ),
                     ],
                   ),
@@ -101,10 +104,7 @@ class _WishlistPageState extends State<WishlistPage> {
                 SizedBox(height: screenSize.height * 0.01),
                 Expanded(
                   child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: screenSize.width * 0.02,
-                      ),
+                    child: Center(
                       child: Text(
                         item['text'],
                         textAlign: TextAlign.center,
@@ -116,7 +116,7 @@ class _WishlistPageState extends State<WishlistPage> {
                   ),
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: Padding(
@@ -135,7 +135,7 @@ class _WishlistPageState extends State<WishlistPage> {
                     Expanded(
                       child: Center(
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          // mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Row(
                               children: List.generate(
@@ -185,6 +185,8 @@ class _WishlistPageState extends State<WishlistPage> {
           );
         }).toList(),
       ),
+
+      // add shadow
     );
   }
 }
