@@ -119,20 +119,6 @@ class _HomepageState extends State<Homepage>{
           ),
         ),
         backgroundColor: Colors.blue,
-        actions: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: MaterialButton(
-                color: Colors.tealAccent,
-                onPressed: (){},
-                textColor: Colors.white,
-                child: Text('Log in'),
-              ),
-            ),
-          )
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
