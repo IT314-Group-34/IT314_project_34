@@ -22,6 +22,31 @@ class _ProfilePageState extends State<ProfilePage> {
         title: const Text("Profile"),
         centerTitle: true,
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Constants.appLightPurpleColor,
+        onPressed: () async {
+          final result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const EditProfilePage(),
+              ));
+          setState(() {
+            usersEditedData = result;
+          });
+        },
+        label: const Text('Edit',
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w400,
+                color: Constants.appPurpleColor)),
+        icon: const Icon(
+          Icons.edit,
+          color: Constants.appPurpleColor,
+          size: 20,
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: ListView(
