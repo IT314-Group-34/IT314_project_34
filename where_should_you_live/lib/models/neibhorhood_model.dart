@@ -3,12 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 
 class CityData {
-  final String fullName;
-  final int geonameId;
-  final String geohash;
-  final double latitude;
-  final double longitude;
-  final int population;
+  String fullName;
+  int geonameId;
+  String geohash;
+  double latitude;
+  double longitude;
+  int population;
   String mobileImageLink; // new field
   List<CategoryScore> categories;
 
@@ -57,9 +57,9 @@ class CityData {
 }
 
 class CategoryScore {
-  final String color;
-  final String name;
-  final double score;
+  String color;
+  String name;
+  double score;
 
   CategoryScore({
     required this.color,
@@ -168,6 +168,18 @@ class CityService {
       }
     }
     return cities;
+  }
+
+  Future<void> updateCityData(CityData cityData) async {
+    final docRef = citiesCollection.doc(cityData.geonameId.toString());
+    final doc = await docRef.get();
+    if (doc.exists) {
+      // City data already exists in Firestore, update it
+      await docRef.update(cityData.toJson());
+    } else {
+      // City data does not exist in Firestore, add it
+      await docRef.set(cityData.toJson());
+    }
   }
 }
 
