@@ -64,4 +64,10 @@ class FirebaseUserRepository {
 
     await userRef.update(user.toJson());
   }
+
+  Future<void> deleteUser(String email) async {
+    final DocumentReference userRef = _firestore.collection('users').doc(email);
+
+    await userRef.delete();
+  }
 }
