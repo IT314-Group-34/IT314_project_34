@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import './sign_up.dart';
+import 'forgotPassword.dart';
+import 'auth.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -9,7 +13,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   @override
@@ -37,10 +41,10 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
-                  controller: nameController,
+                  controller: emailController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'User Name',
+                    labelText: 'Email Address',
                     contentPadding: const EdgeInsets.symmetric(
                       vertical: 12,
                       horizontal: 16,
@@ -55,9 +59,17 @@ class _LoginPageState extends State<LoginPage> {
                   textInputAction: TextInputAction.next,
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter your username';
+                      return 'Please enter your Email';
+                    } else if (value.contains(' ')) {
+                      return 'Email should not contain space.';
+                    }
+                    if (!value.contains('@')) {
+                      return 'Please enter a valid email address';
                     }
                     return null;
+                  },
+                  onSaved: (value) {
+// save the value to the email variable
                   },
                 ),
                 const SizedBox(height: 16),
@@ -90,6 +102,10 @@ class _LoginPageState extends State<LoginPage> {
                 TextButton(
                   onPressed: () {
                     //forgot password screen
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ForgotPasswordScreen()));
                   },
                   child: const Text(
                     'Forgot Password',
@@ -103,9 +119,11 @@ class _LoginPageState extends State<LoginPage> {
                   child: const Text('Login'),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      print(nameController.text);
+                      print(emailController.text);
                       print(passwordController.text);
                     }
+                    loginWithEmail(
+                        context, emailController.text, passwordController.text);
                   },
                   style: ElevatedButton.styleFrom(
                     primary: Colors.green,
@@ -116,6 +134,16 @@ class _LoginPageState extends State<LoginPage> {
                           : screenWidth,
                       50,
                     ),
+                  ),
+                ),
+                //add horizontal line
+                Center(
+                  child: SignInButton(
+                    Buttons.Google,
+                    onPressed: () {
+                      signInWithGoogle(context);
+                      // Handle sign in
+                    },
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -129,6 +157,10 @@ class _LoginPageState extends State<LoginPage> {
                         style: TextStyle(fontSize: 16),
                       ),
                       onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => (SignUpPage())));
                         //signup screen
                       },
                     ),
