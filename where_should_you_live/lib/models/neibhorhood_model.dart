@@ -153,17 +153,21 @@ class CityService {
     }
   }
 
-  Future<List<String>> getAllCityNamesFromFirestore() async {
+  Future<List<Map<String, dynamic>>> getAllCitiesFromFirestore() async {
     QuerySnapshot<Map<String, dynamic>> querySnapshot =
         await citiesCollection.get();
-    List<String> cityNames = [];
+    List<Map<String, dynamic>> cities = [];
     for (DocumentSnapshot<Map<String, dynamic>> doc in querySnapshot.docs) {
       final data = doc.data();
       if (data != null) {
-        cityNames.add(data['name']);
+        Map<String, dynamic> city = {
+          'name': data['name'],
+          'categories': data['categories']
+        };
+        cities.add(city);
       }
     }
-    return cityNames;
+    return cities;
   }
 }
 
@@ -188,3 +192,14 @@ class CityService {
 // // (Assuming that cityData is not null)
 // // ${cityData!.fullName}
 
+//usage: getallcitydata
+// final CityService _cityService = CityService();
+//   late List<Map<String, dynamic>> _cities;
+
+//   Future<void> _loadCities() async {
+//     final cities = await _cityService.getAllCitiesFromFirestore();
+//     setState(() {
+//       _cities = cities;
+//     });
+//     city['categories'][0]['score_out_of_10'].toString()
+//     city['name']
