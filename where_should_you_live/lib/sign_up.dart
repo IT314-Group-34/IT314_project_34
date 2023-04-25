@@ -150,6 +150,31 @@ class _SignUpPageState extends State<SignUpPage> {
                       },
                     ),
                     SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Already have an Account?',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            // TODO: Implement login page logic
+                          },
+                          child: Text(
+                            'Log in',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16),
                     Center(
                       child: ElevatedButton(
                         onPressed: () {
