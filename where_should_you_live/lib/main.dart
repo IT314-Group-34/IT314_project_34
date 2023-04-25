@@ -5,13 +5,14 @@ import 'package:where_should_you_live/homepage.dart';
 import 'package:where_should_you_live/src/features/authentication/screens/onboarding/onboarding_screen.dart';
 import 'forgotPassword.dart';
 import './sign_up.dart';
+import 'package:get/get.dart';
 // import './login.dart';
 import './preference_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(MaterialApp(
+  runApp(GetMaterialApp( // Replace MaterialApp with GetMaterialApp
     home: const OnBoardingScreen(),
     routes: {
       '/signup': (context) => SignUpPage(),
