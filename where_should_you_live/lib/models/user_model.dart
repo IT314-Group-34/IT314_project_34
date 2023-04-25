@@ -57,4 +57,11 @@ class FirebaseUserRepository {
 
     await userRef.set(user.toJson());
   }
+
+  Future<void> updateUser(User user) async {
+    final DocumentReference userRef =
+        _firestore.collection('users').doc(user.email);
+
+    await userRef.update(user.toJson());
+  }
 }
