@@ -48,4 +48,13 @@ class User {
   }
 }
 
+class FirebaseUserRepository {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  Future<void> addUser(User user) async {
+    final DocumentReference userRef =
+        _firestore.collection('users').doc(user.email);
+
+    await userRef.set(user.toJson());
+  }
+}
