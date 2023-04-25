@@ -137,7 +137,29 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ),
             SizedBox(
               height: 50,
-              
+              child: ElevatedButton(
+                onPressed: () {
+                  Map<String, dynamic> usersData = {
+                    "profile": _image?.path,
+                    "name": nameController.text,
+                    "occupation": occupationController.text,
+                    "age": ageController.text,
+                    "height": heightController.text,
+                    "ethnicity": ethnicityController.text,
+                    "religion": religionController.text,
+                  };
+                  Navigator.of(context).pop(usersData);
+                },
+                style: ElevatedButton.styleFrom(
+                    elevation: 10.0,
+                    backgroundColor: Constants.appLightPurpleColor,
+                    foregroundColor: Constants.appPurpleColor,
+                    textStyle: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        color: Constants.appPurpleColor)),
+                child: const Text('Save'),
+              ),
             ),
           ],
         ),
