@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import './log_in.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
+import './auth.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -162,7 +165,10 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                         TextButton(
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => Login()))
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()));
                             // TODO: Implement login page logic
                           },
                           child: Text(
@@ -183,8 +189,20 @@ class _SignUpPageState extends State<SignUpPage> {
                             _formKey.currentState?.save();
                             // TODO: Implement sign-up logic
                           }
+                          signUpWithEmailAndPassword(context,
+                              emailController.text, passwordController.text);
                         },
                         child: Text('Register'),
+                      ),
+                    ),
+                    //add signup with google button
+                    Center(
+                      child: SignInButton(
+                        Buttons.Google,
+                        onPressed: () {
+                          signInWithGoogle(context);
+                          // Handle sign in
+                        },
                       ),
                     ),
                   ],
