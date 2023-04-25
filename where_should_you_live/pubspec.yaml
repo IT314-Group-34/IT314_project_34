@@ -23,6 +23,7 @@ dependencies:
   flutter_pw_validator: ^1.5.0
   material_floating_search_bar: ^0.3.7
   image_picker: ^0.8.7+4
+  flutter_signin_button: ^2.0.0
 
 dev_dependencies:
   flutter_test:
