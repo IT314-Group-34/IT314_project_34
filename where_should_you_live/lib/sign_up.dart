@@ -162,6 +162,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                         TextButton(
                           onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => Login()))
                             // TODO: Implement login page logic
                           },
                           child: Text(
