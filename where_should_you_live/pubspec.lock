@@ -73,7 +73,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.17.0"
-<<<<<<< HEAD
   cross_file:
     dependency: transitive
     description:
@@ -82,8 +81,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.3+4"
-=======
->>>>>>> 028cdfb21adb87f79412d2315571fb5fd625a80b
   crypto:
     dependency: transitive
     description:
@@ -185,7 +182,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
-<<<<<<< HEAD
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -194,8 +190,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.9"
-=======
->>>>>>> 028cdfb21adb87f79412d2315571fb5fd625a80b
   flutter_pw_validator:
     dependency: "direct main"
     description:
@@ -294,7 +288,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
-<<<<<<< HEAD
   image_picker:
     dependency: "direct main"
     description:
@@ -335,8 +328,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.6.3"
-=======
->>>>>>> 028cdfb21adb87f79412d2315571fb5fd625a80b
   intl:
     dependency: transitive
     description:
@@ -599,9 +590,5 @@ packages:
     source: hosted
     version: "1.0.0"
 sdks:
-<<<<<<< HEAD
   dart: ">=2.19.4 <3.0.0"
-=======
-  dart: ">=2.19.3 <3.0.0"
->>>>>>> 028cdfb21adb87f79412d2315571fb5fd625a80b
   flutter: ">=3.3.0"
