@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
-class Homepage extends StatelessWidget {
-  const Homepage({Key? key}) : super(key: key);
+class Homepage extends StatefulWidget {
+  Homepage({Key? key}) : super(key: key);
+  @override
+  _HomepageState createState() => _HomepageState();
+}
+class _HomepageState extends State<Homepage>{
+
   Widget func({required String url, required String value}) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 5),
@@ -44,6 +49,7 @@ class Homepage extends StatelessWidget {
     );
   }
 
+
   Widget list({required IconData icon, required String title}) {
     return ListTile(
       leading: Icon(
@@ -68,7 +74,7 @@ class Homepage extends StatelessWidget {
             children: [
               DrawerHeader(
                 child: Row(
-                  children: const [
+                  children: [
                     CircleAvatar(
                       backgroundColor: Colors.white,
                       radius: 50,
@@ -113,16 +119,16 @@ class Homepage extends StatelessWidget {
           ),
         ),
         backgroundColor: Colors.blue,
-        actions: const [
+        actions: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 10),
-            child: CircleAvatar(
-              radius: 12,
-              backgroundColor: Colors.black,
-              child: Icon(
-                Icons.notifications,
-                size: 17,
-                color: Colors.blue,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: MaterialButton(
+                color: Colors.tealAccent,
+                onPressed: (){},
+                textColor: Colors.white,
+                child: Text('Log in'),
               ),
             ),
           )
