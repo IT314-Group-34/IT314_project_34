@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:where_should_you_live/firebase_options.dart';
 import 'package:where_should_you_live/homepage.dart';
+import 'package:where_should_you_live/navigationBar.dart';
 import 'package:where_should_you_live/src/features/authentication/screens/onboarding/onboarding_screen.dart';
 import 'forgotPassword.dart';
 import './sign_up.dart';
@@ -12,13 +13,14 @@ import './preference_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(GetMaterialApp( // Replace MaterialApp with GetMaterialApp
+  runApp(GetMaterialApp(
+    // Replace MaterialApp with GetMaterialApp
     home: const OnBoardingScreen(),
     routes: {
       '/signup': (context) => SignUpPage(),
       // '/login': (context) => const Login(),
       '/onboarding': (context) => const OnBoardingScreen(),
-      '/home': (context) => Homepage(),
+      '/home': (context) => navigationBar(),
       '/forgotPassword': (context) => ForgotPasswordScreen(),
     },
   ));
