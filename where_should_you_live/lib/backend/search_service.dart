@@ -19,7 +19,7 @@ class SearchService {
       int maxRating = 10,
       List<ExerciseFilter> filters = const []}) {
     Query query = FirebaseFirestore.instance
-        .collection('neighbourhoods')
+        .collection('City')
         .where('criteria', isEqualTo: criteria)
         .where('rating', isGreaterThanOrEqualTo: minRating)
         .where('rating', isLessThanOrEqualTo: maxRating);
