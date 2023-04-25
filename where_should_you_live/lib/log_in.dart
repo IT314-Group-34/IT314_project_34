@@ -30,13 +30,12 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.only(top: 40),
-                  child: const Text(
-                    'Where should you live?',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
+                Text(
+                  'Log In Page',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -115,25 +114,17 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                ElevatedButton(
-                  child: const Text('Login'),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      print(emailController.text);
-                      print(passwordController.text);
-                    }
-                    loginWithEmail(
-                        context, emailController.text, passwordController.text);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.green,
-                    onPrimary: Colors.white,
-                    minimumSize: Size(
-                      screenWidth < minTextFieldWidth
-                          ? screenWidth
-                          : screenWidth,
-                      50,
-                    ),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        print(emailController.text);
+                        print(passwordController.text);
+                      }
+                      loginWithEmail(context, emailController.text,
+                          passwordController.text);
+                    },
+                    child: Text('Log in'),
                   ),
                 ),
                 //add horizontal line
