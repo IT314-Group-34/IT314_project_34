@@ -3,9 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'search_service.dart';
 
+void main() => runApp(MaterialApp(home: SearchPage()));
+
 class SearchPage extends StatefulWidget {
   @override
-  _SearchPageState createState() => _SearchPageState();
+  _SearchPageState createState() => _SearchPageState( );
 }
 
 class _SearchPageState extends State<SearchPage> {
