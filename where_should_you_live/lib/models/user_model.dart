@@ -86,6 +86,22 @@ class FirebaseUserRepository {
             data!['wishlist'].map((item) => {'cityId': item}))
         : [];
   }
+
+  Future<void> addToWishlist(String email, int cityId) async {
+    final DocumentReference userRef = _firestore.collection('users').doc(email);
+
+    await userRef.update({
+      'wishlist': FieldValue.arrayUnion([cityId.toString()]),
+    });
+  }
+
+  Future<void> removeFromWishlist(String email, int cityId) async {
+    final DocumentReference userRef = _firestore.collection('users').doc(email);
+
+    await userRef.update({
+      'wishlist': FieldValue.arrayRemove([cityId.toString()]),
+    });
+  }
 }
 // Usage:
 // final FirebaseUserRepository repository = FirebaseUserRepository();
