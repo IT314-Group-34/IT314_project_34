@@ -10,9 +10,9 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
-  final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   bool _isPasswordVisible = false;
 
@@ -42,40 +42,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextFormField(
-                      controller: nameController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'User Name',
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 12,
-                          horizontal: 16,
-                        ),
-                        isDense: true,
-                      ),
-                      minLines: 1,
-                      textAlignVertical: TextAlignVertical.center,
-                      textAlign: TextAlign.left,
-                      style: const TextStyle(fontSize: 16),
-                      keyboardType: TextInputType.emailAddress,
-                      textInputAction: TextInputAction.next,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your username';
-                        } else if (value.contains(' ')) {
-                          return 'User Name should not contain space.';
-                        } else if (!value
-                            .contains(new RegExp(r'^[a-z0-9]+$'))) {
-                          return 'Username must contain only lowercase letters';
-                        } else if (!RegExp(r'\d').hasMatch(value)) {
-                          return 'Username must contain at least one number';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        // save the value to the username variable
-                      },
-                    ),
+                    
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: emailController,
@@ -133,25 +100,46 @@ class _SignUpPageState extends State<SignUpPage> {
                           return 'Please enter your password';
                         } else if (value.contains(' ')) {
                           return 'Password should not contain any spaces';
-                        } else if (value.length < 12) {
-                          return 'Password must be at least 12 characters long';
-                        } else if (!RegExp(
-                                r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{12,}$')
-                            .hasMatch(value)) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text(
-                                    'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (!@#\$&*~).'),
-                                action: SnackBarAction(
-                                  label: 'OK',
-                                  onPressed: () {},
-                                )),
-                          );
-                          return null;
+                        } else if (value.length < 8) {
+                          return 'Password must be at least 8 characters long';
                         }
                         return null;
                       },
                     ),
+                    
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      obscureText: !_isPasswordVisible,
+                      controller: confirmPasswordController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Confirm Password',
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 16,
+                        ),
+                        isDense: true,
+                        suffixIcon: IconButton(
+                          icon: Icon(_isPasswordVisible
+                              ? Icons.visibility_off
+                              : Icons.visibility),
+                          onPressed: () {
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible;
+                            });
+                          },
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please re-enter your password';
+                        } else if (value != passwordController.text) {
+                          return 'Passwords do not match';
+                        }
+                        return null;
+                      },
+                    ),
+                    
                     SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
