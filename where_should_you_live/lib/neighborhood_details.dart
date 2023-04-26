@@ -216,7 +216,7 @@ class _NeighborhoodStatisticsChartState extends State<NeighborhoodStatisticsChar
                 color: Colors.yellow,
               ),
               Text(
-                '$ratings',
+                ratings.toStringAsFixed(2),
                 //'${widget.data.map((e) => e.rating).reduce((a, b) => a + b) / widget.data.length}',
                 style: TextStyle(fontSize: 18),
               ),
