@@ -16,7 +16,7 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(GetMaterialApp(
     // Replace MaterialApp with GetMaterialApp
-    home: SearchPage(),
+    home: OnBoardingScreen(),
     routes: {
       '/signup': (context) => SignUpPage(),
       // '/login': (context) => const Login(),
