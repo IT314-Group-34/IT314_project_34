@@ -73,7 +73,7 @@ Future<String?> signUpWithEmailAndPassword(
     User? user = userCredential.user;
     if (user != null) {
       // Navigate to home page
-      Navigator.pushReplacementNamed(context, '/home');
+      Navigator.pushReplacementNamed(context, '/preference');
     }
     return null;
   } catch (e) {
