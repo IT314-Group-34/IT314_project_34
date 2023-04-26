@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'search_service.dart';
 
 enum ExerciseFilter {
   filter_1,
@@ -13,17 +14,24 @@ enum ExerciseFilter {
   filter_9
 }
 
+
+//-----------------------------------------
+
 class SearchPage extends StatefulWidget {
   @override
   _SearchPageState createState() => _SearchPageState();
 }
 
+
+//---------------------------------------
+
 class _SearchPageState extends State<SearchPage> {
   static const historyLength = 5;
 
-// The "raw" history that we don't access from the UI, prefilled with values
+  // The "raw" history that we don't access from the UI, prefilled with values
   List<String> _searchHistory = [];
-// The filtered & ordered history that's accessed from the UI
+
+  // The filtered & ordered history that's accessed from the UI
   late List<String> filteredSearchHistory;
   final List<String> _filters = <String>[];
 
@@ -64,7 +72,7 @@ class _SearchPageState extends State<SearchPage> {
     addSearchTerm(term);
   }
 
-// The currently searched-for term
+  // The currently searched-for term
   String? selectedTerm;
   late FloatingSearchBarController controller;
 
@@ -191,6 +199,8 @@ class _SearchPageState extends State<SearchPage> {
   }
 }
 
+
+//-----------------------------------------
 class SearchResultsListView extends StatefulWidget {
   final String? searchTerm;
 
@@ -203,6 +213,8 @@ class SearchResultsListView extends StatefulWidget {
   State<SearchResultsListView> createState() => _SearchResultsListViewState();
 }
 
+
+//-----------------------------------------
 class _SearchResultsListViewState extends State<SearchResultsListView> {
   final List<String> _filters = <String>[];
   @override
@@ -265,3 +277,27 @@ class _SearchResultsListViewState extends State<SearchResultsListView> {
     return const Scaffold(); // change the return function here
   }
 }
+
+
+
+//---------------------------------------------
+
+
+// class SearchAndFilterView extends StatefulWidget {
+//   // ...
+// }
+
+// class _SearchAndFilterViewState extends State<SearchAndFilterView> {
+//   TextEditingController _searchController = TextEditingController();
+//   // Filter state variables
+
+//   void _searchAndFilter() {
+//     String searchQuery = _searchController.text;
+//     SearchService().searchNeighborhoods( searchTerm, _filters);
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     // Build search bar and filter buttons
+//   }
+// }
