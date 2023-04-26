@@ -6,50 +6,50 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-Future<UserCredential> signInWithGoogle(BuildContext context) async {
-  // Trigger the authentication flow
-  final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-  // Obtain the auth details from the request
-  final GoogleSignInAuthentication googleAuth =
-      await googleUser!.authentication;
-
-  // Create a new credential
-  final OAuthCredential credential = GoogleAuthProvider.credential(
-    accessToken: googleAuth.accessToken,
-    idToken: googleAuth.idToken,
-  );
-
-  // Once signed in, return the UserCredential
-  UserCredential userCredential =
-      await FirebaseAuth.instance.signInWithCredential(credential);
-  User? user = userCredential.user;
-  if (user != null) {
-    // Navigate to home page
-    Navigator.pushReplacementNamed(context, '/home');
-  }
-  return userCredential;
-}
-
 // Future<UserCredential> signInWithGoogle(BuildContext context) async {
-//   // Create a new provider
-//   GoogleAuthProvider googleProvider = GoogleAuthProvider();
+//   // Trigger the authentication flow
+//   final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-//   googleProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-//   googleProvider.setCustomParameters({'login_hint': 'user@example.com'});
+//   // Obtain the auth details from the request
+//   final GoogleSignInAuthentication googleAuth =
+//       await googleUser!.authentication;
+
+//   // Create a new credential
+//   final OAuthCredential credential = GoogleAuthProvider.credential(
+//     accessToken: googleAuth.accessToken,
+//     idToken: googleAuth.idToken,
+//   );
 
 //   // Once signed in, return the UserCredential
 //   UserCredential userCredential =
-//       await FirebaseAuth.instance.signInWithPopup(googleProvider);
+//       await FirebaseAuth.instance.signInWithCredential(credential);
 //   User? user = userCredential.user;
 //   if (user != null) {
 //     // Navigate to home page
 //     Navigator.pushReplacementNamed(context, '/home');
 //   }
 //   return userCredential;
-//   // Or use signInWithRedirect
-//   // return await FirebaseAuth.instance.signInWithRedirect(googleProvider);
 // }
+
+Future<UserCredential> signInWithGoogle(BuildContext context) async {
+  // Create a new provider
+  GoogleAuthProvider googleProvider = GoogleAuthProvider();
+
+  googleProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+  googleProvider.setCustomParameters({'login_hint': 'user@example.com'});
+
+  // Once signed in, return the UserCredential
+  UserCredential userCredential =
+      await FirebaseAuth.instance.signInWithPopup(googleProvider);
+  User? user = userCredential.user;
+  if (user != null) {
+    // Navigate to home page
+    Navigator.pushReplacementNamed(context, '/home');
+  }
+  return userCredential;
+  // Or use signInWithRedirect
+  // return await FirebaseAuth.instance.signInWithRedirect(googleProvider);
+}
 
 // Future<UserCredential> signInWithGitHub() async {
 //   // Create a new provider
