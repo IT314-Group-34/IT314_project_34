@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:where_should_you_live/firebase_options.dart';
 import 'package:where_should_you_live/homepage.dart';
 import 'package:where_should_you_live/navigationBar.dart';
+import 'package:where_should_you_live/profile.dart';
 import 'package:where_should_you_live/src/features/authentication/screens/onboarding/onboarding_screen.dart';
+import 'package:where_should_you_live/wishlist.dart';
 import 'forgotPassword.dart';
 import './sign_up.dart';
 import 'package:get/get.dart';
@@ -18,7 +20,7 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(GetMaterialApp(
     // Replace MaterialApp with GetMaterialApp
-    home: MyApp(),
+    home: navigationBar(),
     routes: {
       '/signup': (context) => SignUpPage(),
       // '/login': (context) => const Login(),
@@ -26,6 +28,8 @@ void main() async {
       '/home': (context) => navigationBar(),
       '/forgotPassword': (context) => ForgotPasswordScreen(),
       '/preference': (context) => PreferencePage(),
+      '/profile': (context) => ProfilePage(),
+      '/wishlist': (context) => WishlistPage(),
     },
   ));
 }
