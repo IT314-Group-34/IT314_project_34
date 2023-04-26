@@ -7,6 +7,8 @@ import 'package:where_should_you_live/src/features/authentication/screens/onboar
 import 'forgotPassword.dart';
 import './sign_up.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'navigationBar.dart';
 // import './login.dart';
 import './preference_page.dart';
 import 'searchAndFilterView.dart';
@@ -16,7 +18,7 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(GetMaterialApp(
     // Replace MaterialApp with GetMaterialApp
-    home: SearchPage(),
+    home: MyApp(),
     routes: {
       '/signup': (context) => SignUpPage(),
       // '/login': (context) => const Login(),
@@ -26,6 +28,32 @@ void main() async {
       '/preference': (context) => PreferencePage(),
     },
   ));
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'My App',
+      home: FutureBuilder<bool>(
+        future: isLoggedIn(),
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.data == true) {
+            return navigationBar();
+          } else {
+            return OnBoardingScreen();
+          }
+        },
+      ),
+    );
+  }
+
+  Future<bool> isLoggedIn() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('isLoggedIn') ?? false;
+  }
 }
 
 // class MyPreference extends StatelessWidget {
