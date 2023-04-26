@@ -9,6 +9,7 @@ class User {
   double height;
   String ethnicity;
   String religion;
+  List<String>? wishlist;
 
   User({
     required this.firstName,
@@ -19,6 +20,7 @@ class User {
     required this.height,
     required this.ethnicity,
     required this.religion,
+    this.wishlist,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -31,6 +33,8 @@ class User {
       height: json['height'] ?? 0.0,
       ethnicity: json['ethnicity'] ?? '',
       religion: json['religion'] ?? '',
+      wishlist:
+          json['wishlist'] != null ? List<String>.from(json['wishlist']) : null,
     );
   }
 
@@ -44,6 +48,7 @@ class User {
       'height': height,
       'ethnicity': ethnicity,
       'religion': religion,
+      'wishlist': wishlist,
     };
   }
 }
@@ -70,4 +75,34 @@ class FirebaseUserRepository {
 
     await userRef.delete();
   }
+
+  Future<List<Map<String, dynamic>>> getWishlist(String email) async {
+    final DocumentReference userRef = _firestore.collection('users').doc(email);
+    final DocumentSnapshot snapshot = await userRef.get();
+    final Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+
+    return data?['wishlist'] != null
+        ? List<Map<String, dynamic>>.from(
+            data!['wishlist'].map((item) => {'cityId': item}))
+        : [];
+  }
+
+  Future<void> addToWishlist(String email, int cityId) async {
+    final DocumentReference userRef = _firestore.collection('users').doc(email);
+
+    await userRef.update({
+      'wishlist': FieldValue.arrayUnion([cityId.toString()]),
+    });
+  }
+
+  Future<void> removeFromWishlist(String email, int cityId) async {
+    final DocumentReference userRef = _firestore.collection('users').doc(email);
+
+    await userRef.update({
+      'wishlist': FieldValue.arrayRemove([cityId.toString()]),
+    });
+  }
 }
+// Usage:
+// final FirebaseUserRepository repository = FirebaseUserRepository();
+// await repository.removeFromWishlist('user@example.com', 123);
