@@ -22,6 +22,9 @@ class _LoginPageState extends State<LoginPage> {
     final minTextFieldWidth = 250.0;
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Where Should You Live'),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -38,22 +41,22 @@ class _LoginPageState extends State<LoginPage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
                 TextFormField(
                   controller: emailController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Email Address',
                     contentPadding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 16,
+                      vertical: 16,
+                      horizontal: 20,
                     ),
                     isDense: true,
                   ),
                   minLines: 1,
                   textAlignVertical: TextAlignVertical.center,
                   textAlign: TextAlign.left,
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 18),
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
                   validator: (value) {
@@ -68,10 +71,10 @@ class _LoginPageState extends State<LoginPage> {
                     return null;
                   },
                   onSaved: (value) {
-// save the value to the email variable
+                    // save the value to the email variable
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
                 TextFormField(
                   obscureText: true,
                   controller: passwordController,
@@ -79,15 +82,15 @@ class _LoginPageState extends State<LoginPage> {
                     border: OutlineInputBorder(),
                     labelText: 'Password',
                     contentPadding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 16,
+                      vertical: 16,
+                      horizontal: 20,
                     ),
                     isDense: true,
                   ),
                   minLines: 1,
                   textAlignVertical: TextAlignVertical.center,
                   textAlign: TextAlign.left,
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 20),
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.done,
                   validator: (value) {
@@ -97,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
                 TextButton(
                   onPressed: () {
                     //forgot password screen
@@ -110,10 +113,11 @@ class _LoginPageState extends State<LoginPage> {
                     'Forgot Password',
                     style: TextStyle(
                       color: Colors.blue,
+                      fontSize: 20,
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
@@ -128,6 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 //add horizontal line
+                SizedBox(height: 20),
                 Center(
                   child: SignInButton(
                     Buttons.Google,
@@ -137,15 +142,16 @@ class _LoginPageState extends State<LoginPage> {
                     },
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Don't have an account? "),
+                    const Text("Don't have an account? ",
+                        style: TextStyle(fontSize: 20)),
                     TextButton(
                       child: const Text(
                         'Sign Up',
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(fontSize: 20),
                       ),
                       onPressed: () {
                         Navigator.push(
