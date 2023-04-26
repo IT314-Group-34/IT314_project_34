@@ -1,18 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:where_should_you_live/login.dart';
-import 'neigborhood_model.dart';
+import 'city_rating.dart';
+import 'models/neibhorhood_model.dart';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'dart:ui';
 
+String cityName = 'mumbai';
+
 class RatingWidget extends StatefulWidget {
+  final CityService cityService = CityService();
+  final CityDatabase citydatabase = CityDatabase();
+  CityData? cityData;
+
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final CollectionReference<Map<String, dynamic>> citiesCollection =
+      FirebaseFirestore.instance.collection('City');
+
   @override
-  _RatingWidgetState createState() => _RatingWidgetState();
+  _RatingWidgetState createState() => _RatingWidgetState(cityData, citiesCollection, citydatabase);
+
+  @override
+  void initState() {
+    _getCityData();
+  }
+
+  Future<void> _getCityData() async {
+    cityData = await cityService.getCityData(cityName);
+    setState(() {});
+  }
+
+  void setState(Null Function() param0) {}
 }
 
 class _RatingWidgetState extends State<RatingWidget> {
+  CityData? cityData;
+  CollectionReference<Map<String, dynamic>> citiesCollection;
+  CityDatabase citydatabase;
   int _rating = 0;
+  int sum = 0;
+  int count = 0;
+
+  _RatingWidgetState(this.cityData, this.citiesCollection, this.citydatabase);
+
+  //get citydatabase => null;
 
   void _onRatingChanged(int rating) {
     setState(() {
@@ -66,19 +97,16 @@ class _RatingWidgetState extends State<RatingWidget> {
                   ),
               ],
             ),
-
             SizedBox(height: 16),
-
             ElevatedButton(
-              onPressed: () => {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NeighborhoodStatisticsPage()),
-                )
+              onPressed: () async {
+                // cityData?.rating += _rating;
+                // cityData?.numberOfUsers += 1;
+                // await cityService.updateCityData(cityData!); 
+                await citydatabase.updateSumAndCount(cityName, _rating,1);
               },
               child: const Text('SUBMIT'),
             ),
-
           ],
         ),
       ),
@@ -107,9 +135,11 @@ class NeighborhoodStatisticsChart extends StatefulWidget {
 class _NeighborhoodStatisticsChartState extends State<NeighborhoodStatisticsChart> {
   
   final CityService cityService = CityService();
-  String cityName = 'Delhi';
+  //String cityName = 'mumbai';
   CityData? cityData;
-
+  double ratings=0;
+  int total_points=0;
+  int total_users=0;
 
   @override
   void initState() {
@@ -120,6 +150,9 @@ class _NeighborhoodStatisticsChartState extends State<NeighborhoodStatisticsChar
   Future<void> _getCityData() async {
     // Use the CityService object to get city data for the current city name
     cityData = await cityService.getCityData(cityName);
+    total_points=cityData!.rating;
+    total_users=cityData!.numberOfUsers;
+    ratings = total_points.toDouble() / total_users;
     // Trigger a UI update
     setState(() {});
   }
@@ -183,7 +216,7 @@ class _NeighborhoodStatisticsChartState extends State<NeighborhoodStatisticsChar
                 color: Colors.yellow,
               ),
               Text(
-                '4.5',
+                '$ratings',
                 //'${widget.data.map((e) => e.rating).reduce((a, b) => a + b) / widget.data.length}',
                 style: TextStyle(fontSize: 18),
               ),
@@ -240,12 +273,15 @@ class _FavoriteIconState extends State<FavoriteIcon> {
     );
   }
 }
+//}
 
 
+//  CategoryScore housingCategory = cityData.categories.firstWhere((category) => category.name == 'Housing');
 @override
   _NeighborhoodStatisticsPageState createState() =>
       _NeighborhoodStatisticsPageState();
 
+  //void setState(Null Function() param0) {}
 
 int city_id=0;
 
@@ -258,7 +294,7 @@ class NeighborhoodStatisticsPage extends StatefulWidget {
 class _NeighborhoodStatisticsPageState extends State<NeighborhoodStatisticsPage> {
   bool _isNeighborhoodFavorited = false; // Track the favorite state
   final CityService cityService = CityService();
-  String cityName = 'Delhi';
+  //String cityName = 'mumbai';
   CityData? cityData;
 
   CategoryScore? transport;
@@ -292,6 +328,8 @@ class _NeighborhoodStatisticsPageState extends State<NeighborhoodStatisticsPage>
   double a10 = 0;
   int d10=0;
 
+  
+
 
   List<NeighborhoodStatistics> statistics = [];
 
@@ -304,11 +342,9 @@ class _NeighborhoodStatisticsPageState extends State<NeighborhoodStatisticsPage>
   Future<void> _getCityData() async {
     // Use the CityService object to get city data for the current city name
     cityData = await cityService.getCityData(cityName);
-    // housingCategory = cityData?.categories.firstWhere((category) => category.name == 'Housing');
-    // a1 = housingCategory?.score as double;
-    // d1=a1.toInt();
     //city_id=$ as int;{cityData?.geonameId;};
     city_id = cityData?.geonameId ?? 0;
+    //url=Uri.parse('${cityData?.mobileImageLink}');
     // print("$city_id");
     
     transport = cityData?.categories.firstWhere((category) => category.name == 'Travel Connectivity');
@@ -400,14 +436,30 @@ class _NeighborhoodStatisticsPageState extends State<NeighborhoodStatisticsPage>
       ),
       body: Column(
         children: [
-          SizedBox(height: 16.0),
-            Image.network(
-              '${cityData?.mobileImageLink}',
-              //Uri.parse('${cityData?.mobileImageLink}') as String,
-              height: 200.0,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
+          // Container(
+          //     height: 200,
+          //     decoration: BoxDecoration(
+          //       color: Colors.white,
+          //       borderRadius: BorderRadius.circular(10),
+          //       image: const DecorationImage(
+          //         fit: BoxFit.cover,
+          //         image: NetworkImage(
+          //             'https://d13k13wj6adfdf.cloudfront.net/urban_areas/delhi-c0a7e4cf62.jpg'),
+          //       ),
+          //     ),
+          //     ),
+          
+
+          
+          // SizedBox(
+          //   height: 200.0,
+          //   width: 600.0,
+          //   child: Image.network(
+          //   //'${cityData?.mobileImageLink}',
+          //   'https://d13k13wj6adfdf.cloudfront.net/urban_areas/delhi-c0a7e4cf62.jpg',
+          //   fit: BoxFit.cover,
+          // ),
+          // ),
           
           Expanded(child: NeighborhoodStatisticsChart(data: statistics)),
         ],
@@ -428,6 +480,29 @@ class EditFactorsScreen extends StatefulWidget {
 
 class _EditFactorsScreenState extends State<EditFactorsScreen> {
   final _formKey = GlobalKey<FormState>();
+  final CityService cityService = CityService();
+  // String cityName = 'mumbai';
+  CityData? cityData;
+  CategoryScore? crime;
+  double val=0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _getCityData();
+  }
+
+  Future<void> _getCityData() async {
+    // Use the CityService object to get city data for the current city name
+    cityData = await cityService.getCityData(cityName);
+    // crime = cityData?.categories.firstWhere((category) => category.name == 'Venture Capital');
+    // val=cityData!.categories[1].score;
+    // print("you are stuck with ${cityData!.categories[1].score}");
+    // print("you also stuck with $val");
+    // print("you also stuck with ${crime!.score}");
+    // Trigger a UI update
+    setState(() {});
+  }
 
   double _crimeRate = 0.0;
   double _transportationConnectivity = 0.0;
@@ -439,45 +514,6 @@ class _EditFactorsScreenState extends State<EditFactorsScreen> {
   double _safety = 0.0;
   double _internetConnectivity = 0.0;
   double _pollutionRate = 0.0;
-
-//Save changes in the Database
-void _saveChanges() async {
-  try {
-    
-    String temp=city_id.toString();
-    
-    // Get a reference to the document you want to update
-    DocumentReference docRef = FirebaseFirestore.instance.collection('City').doc(temp);
-
-    // Update the document
-    await docRef.update({
-      //'population': 10927777,
-      // 'categories.3.score_out_of_10': '$_crimeRate',
-      // 'categories.4.score_out_of_10': '$_transportationConnectivity',
-      // 'categories.9.score_out_of_10': 1,
-      // 'categories.8.score_out_of_10': '$_healthcare',
-      // 'categories.1.score_out_of_10': '$_costOfLiving',
-      // 'categories.6.score_out_of_10': '$_businessFreedom',
-      // 'categories.0.score_out_of_10': '$_housing',
-      // 'categories.7.score_out_of_10': '$_safety',
-      // 'categories.13.score_out_of_10': '$_internetConnectivity',
-      // 'categories.10.score_out_of_10': '$_pollutionRate',
-      // 'categories.0': FieldValue.arrayUnion([
-      //                 {
-      //                   'name': 'Housing',
-      //                   'color':#ffffff,
-      //                   'score_out_of_10': 4,
-      //                 }
-      //               ])
-    });
-
-    print("yes3");
-
-    print("Document updated successfully");
-  } catch (e) {
-    print("Error updating document: $e");
-  }
-}
 
 
   @override
@@ -501,6 +537,7 @@ void _saveChanges() async {
                 onChanged: (newValue) {
                   setState(() {
                     _crimeRate = newValue;
+                     cityData!.categories[3].score = newValue;
                   });
                 },
               ),
@@ -510,6 +547,7 @@ void _saveChanges() async {
                 onChanged: (newValue) {
                   setState(() {
                     _transportationConnectivity = newValue;
+                     cityData!.categories[4].score = newValue;
                   });
                 },
               ),
@@ -519,6 +557,7 @@ void _saveChanges() async {
                 onChanged: (newValue) {
                   setState(() {
                     _education = newValue;
+                     cityData!.categories[9].score = newValue;
                   });
                 },
               ),
@@ -528,6 +567,7 @@ void _saveChanges() async {
                 onChanged: (newValue) {
                   setState(() {
                     _healthcare = newValue;
+                     cityData!.categories[8].score = newValue;
                   });
                 },
               ),
@@ -537,6 +577,7 @@ void _saveChanges() async {
                 onChanged: (newValue) {
                   setState(() {
                     _costOfLiving = newValue;
+                     cityData!.categories[1].score = newValue;
                   });
                 },
               ),
@@ -546,6 +587,7 @@ void _saveChanges() async {
                 onChanged: (newValue) {
                   setState(() {
                     _businessFreedom = newValue;
+                     cityData!.categories[6].score = newValue;
                   });
                 },
               ),
@@ -555,6 +597,7 @@ void _saveChanges() async {
                 onChanged: (newValue) {
                   setState(() {
                     _housing = newValue;
+                     cityData!.categories[0].score = newValue;
                   });
                 },
               ),
@@ -564,6 +607,7 @@ void _saveChanges() async {
                 onChanged: (newValue) {
                   setState(() {
                     _safety = newValue;
+                     cityData!.categories[7].score = newValue;
                   });
                 },
               ),
@@ -573,6 +617,7 @@ void _saveChanges() async {
                 onChanged: (newValue) {
                   setState(() {
                     _internetConnectivity = newValue;
+                     cityData!.categories[13].score = newValue;
                   });
                 },
               ),
@@ -582,6 +627,7 @@ void _saveChanges() async {
                 onChanged: (newValue) {
                   setState(() {
                     _pollutionRate = newValue;
+                     cityData!.categories[10].score = newValue;
                   });
                 },
               ),
@@ -589,14 +635,15 @@ void _saveChanges() async {
               Builder(
   builder: (BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
-        print("No");
-        _saveChanges(); //For change data in Database
-        print("yes");
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => NeighborhoodStatisticsPage()),
-        );
+      onPressed: () async{
+
+    // Use the CityService object to update city data for the current city name
+     await cityService.updateCityData(cityData!); 
+      
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => NeighborhoodStatisticsPage()),
+        // );
       },
       child: Text('Save Changes'),
     );
@@ -632,6 +679,7 @@ void _saveChanges() async {
     );
   }
 }
+
 
 
 void main() {
