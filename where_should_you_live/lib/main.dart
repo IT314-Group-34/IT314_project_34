@@ -9,19 +9,21 @@ import './sign_up.dart';
 import 'package:get/get.dart';
 // import './login.dart';
 import './preference_page.dart';
+import 'searchAndFilterView.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(GetMaterialApp(
     // Replace MaterialApp with GetMaterialApp
-    home: const OnBoardingScreen(),
+    home: SearchPage(),
     routes: {
       '/signup': (context) => SignUpPage(),
       // '/login': (context) => const Login(),
       '/onboarding': (context) => const OnBoardingScreen(),
       '/home': (context) => navigationBar(),
       '/forgotPassword': (context) => ForgotPasswordScreen(),
+      '/preference': (context) => PreferencePage(),
     },
   ));
 }

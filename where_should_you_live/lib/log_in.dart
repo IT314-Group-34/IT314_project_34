@@ -120,9 +120,9 @@ class _LoginPageState extends State<LoginPage> {
                       if (_formKey.currentState!.validate()) {
                         print(emailController.text);
                         print(passwordController.text);
+                        loginWithEmail(context, emailController.text,
+                            passwordController.text);
                       }
-                      loginWithEmail(context, emailController.text,
-                          passwordController.text);
                     },
                     child: Text('Log in'),
                   ),

@@ -42,7 +42,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: emailController,
@@ -106,7 +105,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         return null;
                       },
                     ),
-                    
+
                     const SizedBox(height: 16),
                     TextFormField(
                       obscureText: !_isPasswordVisible,
@@ -139,7 +138,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         return null;
                       },
                     ),
-                    
+
                     SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -175,10 +174,10 @@ class _SignUpPageState extends State<SignUpPage> {
                         onPressed: () {
                           if (_formKey.currentState?.validate() == true) {
                             _formKey.currentState?.save();
+                            signUpWithEmailAndPassword(context,
+                                emailController.text, passwordController.text);
                             // TODO: Implement sign-up logic
                           }
-                          signUpWithEmailAndPassword(context,
-                              emailController.text, passwordController.text);
                         },
                         child: Text('Register'),
                       ),
