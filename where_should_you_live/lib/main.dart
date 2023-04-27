@@ -14,6 +14,7 @@ import 'navigationBar.dart';
 // import './login.dart';
 import './preference_page.dart';
 import 'searchAndFilterView.dart';
+import './wishlist.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
