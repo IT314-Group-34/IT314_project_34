@@ -6,7 +6,9 @@ import 'package:where_should_you_live/src/constants/colors.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnBoardingScreen extends StatelessWidget {
-  const OnBoardingScreen({Key? key}) : super(key: key);
+  const OnBoardingScreen(
+      {Key? key, required Future<void> Function() onLoggedIn})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     final obController = OnBoardingController();

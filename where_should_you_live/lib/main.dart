@@ -24,7 +24,6 @@ void main() async {
     routes: {
       '/signup': (context) => SignUpPage(),
       // '/login': (context) => const Login(),
-      '/onboarding': (context) => const OnBoardingScreen(),
       '/home': (context) => navigationBar(),
       '/forgotPassword': (context) => ForgotPasswordScreen(),
       '/preference': (context) => PreferencePage(),
@@ -34,31 +33,60 @@ void main() async {
   ));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _isLoggedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  Future<bool> _checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    setState(() {
+      _isLoggedIn = isLoggedIn;
+    });
+    return isLoggedIn;
+  }
+
+  Future<void> _setLoginStatus(bool isLoggedIn) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', isLoggedIn);
+    setState(() {
+      _isLoggedIn = isLoggedIn;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'My App',
       home: FutureBuilder<bool>(
-        future: isLoggedIn(),
-        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        future: _checkLoginStatus(),
+        builder: (BuildContext context, AsyncSnapshot<bool?> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator();
           } else if (snapshot.data == true) {
             return navigationBar();
           } else {
-            return OnBoardingScreen();
+            return OnBoardingScreen(
+              onLoggedIn: () => _setLoginStatus(true),
+            );
           }
         },
       ),
     );
   }
-
-  Future<bool> isLoggedIn() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('isLoggedIn') ?? false;
-  }
 }
+
+
 
 // class MyPreference extends StatelessWidget {
 //   @override

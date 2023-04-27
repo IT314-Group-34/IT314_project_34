@@ -4,7 +4,7 @@ import 'constants.dart';
 import 'imagepicker.dart';
 
 class EditProfilePage extends StatefulWidget {
-  const EditProfilePage({super.key});
+  const EditProfilePage({super.key, Map<String, dynamic>? objUserData});
 
   @override
   State<EditProfilePage> createState() => _EditProfilePageState();
