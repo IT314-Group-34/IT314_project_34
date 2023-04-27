@@ -27,7 +27,7 @@ void main() async {
     // Replace MaterialApp with GetMaterialApp
     home: OnBoardingScreen(
       onLoggedIn: () async {
-        await _setLoginStatus(true);
+        await _setLoginStatus(true); 
       },
     ),
     routes: {
