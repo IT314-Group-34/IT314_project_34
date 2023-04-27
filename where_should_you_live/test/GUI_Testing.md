@@ -9,7 +9,7 @@ All the Webpages in the Neighborhood Recommendation System
 4. **Profile**
     1. **Edit Profile**
 5. **Preference Page**
-    1. **Update your preferences**
+    1. **Change your preferences**
 6. **Home Page**
     1. **View Profile**
     2. **About Us**
@@ -21,6 +21,12 @@ All the Webpages in the Neighborhood Recommendation System
 9. **Search Page**
     1. **Add Filters**
 10. **Neighborhood List**
+    1. **Neighborhood Details**
+11. **City Statistics** 
+    1. **Edit Factors**
+    2. **Rate the City**
+    3. **Add to Wishlist**
+12. **Rating Page**
 
 ### 1. Onboarding Page
 
@@ -42,7 +48,7 @@ All the Webpages in the Neighborhood Recommendation System
 | Maps/Navigation Bar | Horizontal button for navigation |
 | General | all good |
 
-### 2 **Log In**
+### 2. **Log In**
 
 | Functionality | Workability |
 | --- | --- |
@@ -224,3 +230,43 @@ needed) |
 | Menus its operation | Not present |
 | Maps/Navigation Bar | Present redirect to home, Search, Profile and Wishlist good UI  |
 | General | Wishlist button not responding |
+
+### 11. City Statistics
+
+| Functionality | Workability |
+| --- | --- |
+| Text  | UI done |
+| Text-field | Not present |
+| Dropdown | Not present |
+| Buttons | UI done |
+| Check-box | Not present |
+| Radio- Button | Not present |
+| Hyperlink | Edit factors and add to Wishlist done  |
+| Image | City Image fine |
+| Num-input fields | Not present |
+| Scroll bar | Not needed |
+| Message | no message needed |
+| Logo | Not present |
+| Menus its operation | Not present |
+| Maps/Navigation Bar | Noy present |
+| General | All good |
+
+### 12. Rating Page
+
+| Functionality | Workability |
+| --- | --- |
+| Text  | UI done |
+| Text-field | Not present |
+| Dropdown | Not present |
+| Buttons | UI done |
+| Check-box | Not present |
+| Radio- Button | Star shaped for rating  |
+| Hyperlink | Not needed |
+| Image | Not present |
+| Num-input fields | Not present |
+| Scroll bar | Not needed |
+| Message | no message needed |
+| Logo | Not present |
+| Menus its operation | Not present |
+| Maps/Navigation Bar | Not present |
+| General | all good |

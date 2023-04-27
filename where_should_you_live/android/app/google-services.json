@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "625745952057",
+    "firebase_url": "https://whereshouldyoulive-1e51b-default-rtdb.firebaseio.com",
     "project_id": "whereshouldyoulive-1e51b",
     "storage_bucket": "whereshouldyoulive-1e51b.appspot.com"
   },
@@ -31,10 +32,10 @@
               "client_type": 3
             },
             {
-              "client_id": "625745952057-jrev9btkhlq7kouqs5mr4q31dlp4tjrf.apps.googleusercontent.com",
+              "client_id": "625745952057-gfagi3a81cgdrqpquv8eei7if5ighv7o.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.firstApp"
+                "bundle_id": "com.example.whereShouldYouLive"
               }
             }
           ]
@@ -67,10 +68,10 @@
               "client_type": 3
             },
             {
-              "client_id": "625745952057-jrev9btkhlq7kouqs5mr4q31dlp4tjrf.apps.googleusercontent.com",
+              "client_id": "625745952057-gfagi3a81cgdrqpquv8eei7if5ighv7o.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.firstApp"
+                "bundle_id": "com.example.whereShouldYouLive"
               }
             }
           ]

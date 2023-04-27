@@ -282,6 +282,20 @@ class CityService {
       await docRef.set(cityData.toJson());
     }
   }
+
+  Future<CityData?> getCityDataById(String cityId) async {
+    // Get the CityData object from Firestore
+    final docSnapshot =
+        await FirebaseFirestore.instance.collection('City').doc(cityId).get();
+    if (docSnapshot.exists) {
+      final cityDataJson = docSnapshot.data()!;
+      final cityData = CityData.fromJsondoc(cityDataJson);
+      return cityData;
+    } else {
+      // City data does not exist in Firestore
+      return null;
+    }
+  }
 }
 
 // Usage:

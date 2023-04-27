@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -15,19 +11,19 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(),
+      home: const addNeighbourhood(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class addNeighbourhood extends StatefulWidget {
+  const addNeighbourhood({Key? key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<addNeighbourhood> {
   int _activeStepIndex = 0;
 
   TextEditingController name = TextEditingController();
@@ -107,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text('Email: ${email.text}'),
-                const Text('Password: *****'),
+                const Text('Password: ***'),
                 Text('Address of New Area: ${address.text}'),
                 Text('PinCode : ${pincode.text}'),
               ],
@@ -147,14 +143,14 @@ class _MyHomePageState extends State<MyHomePage> {
             _activeStepIndex = index;
           });
         },
-        controlsBuilder: (context, {onStepContinue, onStepCancel}) {
+        controlsBuilder: (context, ControlsDetails controls) {
           final isLastStep = _activeStepIndex == stepList().length - 1;
           return Container(
             child: Row(
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: onStepContinue,
+                    onPressed: controls.onStepContinue,
                     child: (isLastStep)
                         ? const Text('Submit')
                         : const Text('Next'),
@@ -166,7 +162,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 if (_activeStepIndex > 0)
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: onStepCancel,
+                      onPressed: controls.onStepCancel,
                       child: const Text('Back'),
                     ),
                   )
