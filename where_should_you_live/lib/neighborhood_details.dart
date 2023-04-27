@@ -258,26 +258,32 @@ class FavoriteIcon extends StatefulWidget {
 
 class _FavoriteIconState extends State<FavoriteIcon> {
   bool _isFavorite = false;
+  bool flag = false;
   final CityService cityService = CityService();
   final CityDatabase citydatabase = CityDatabase();
   final FirebaseUserRepository f1 = FirebaseUserRepository();
   CityData? cityData;
+  late Future<List<String>> list1;
+  String s='';
 
   @override
   void initState() {
     super.initState();
-    _isFavorite = widget.isFavorite; // Set the initial state from the prop
-     _getCityData();
+    _getCityData();
   }
   
-
   Future<void> _getCityData() async {
     cityData = await cityService.getCityData(cityName);
     id=cityData!.geonameId;
-    print("$id");
-    setState(() {});
+    s=id.toString();
+    list1 = f1.getWishlist(email);
+    list1.then((list) {
+      flag = list.contains(s);
+      setState(() {
+        _isFavorite = flag;
+      });
+    });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -295,7 +301,6 @@ class _FavoriteIconState extends State<FavoriteIcon> {
     );
   }
 }
-//}
 
 //  CategoryScore housingCategory = cityData.categories.firstWhere((category) => category.name == 'Housing');
 @override
@@ -361,7 +366,6 @@ class _NeighborhoodStatisticsPageState
   Future<void> _getCityData() async {
     // Use the CityService object to get city data for the current city name
     cityData = await cityService.getCityData(cityName);
-    //city_id=$ as int;{cityData?.geonameId;};
     city_id = cityData?.geonameId ?? 0;
     //url=Uri.parse('${cityData?.mobileImageLink}');
     // print("$city_id");
@@ -523,11 +527,7 @@ class _EditFactorsScreenState extends State<EditFactorsScreen> {
   Future<void> _getCityData() async {
     // Use the CityService object to get city data for the current city name
     cityData = await cityService.getCityData(cityName);
-    // crime = cityData?.categories.firstWhere((category) => category.name == 'Venture Capital');
-    // val=cityData!.categories[1].score;
-    // print("you are stuck with ${cityData!.categories[1].score}");
-    // print("you also stuck with $val");
-    // print("you also stuck with ${crime!.score}");
+    
     // Trigger a UI update
     setState(() {});
   }
