@@ -11,6 +11,8 @@ class CityData {
   int population;
   String mobileImageLink; // new field
   List<CategoryScore> categories;
+  int numberOfUsers; // new field
+  int rating;
 
   CityData({
     required this.fullName,
@@ -21,6 +23,8 @@ class CityData {
     required this.population,
     required this.mobileImageLink,
     required this.categories,
+    required this.numberOfUsers,
+    required this.rating,
   });
 
   factory CityData.fromJson(Map<String, dynamic> json) {
@@ -40,6 +44,8 @@ class CityData {
       population: json['population'] ?? 0,
       mobileImageLink: '', // initialize to empty string
       categories: categories,
+      numberOfUsers: 0, // initialize to zero
+      rating: 0,
     );
   }
 
@@ -53,13 +59,15 @@ class CityData {
 
     return CityData(
       fullName: json['fullName'] ?? '',
-      geonameId: json['geoname_id'] ?? 0,
+      geonameId: json['city_id'] ?? 0,
       geohash: json['geohash'] ?? '',
       latitude: json['latitude'] ?? 0,
       longitude: json['longitude'] ?? 0,
       population: json['population'] ?? 0,
       mobileImageLink: json['mobile_image_link'], // initialize to empty string
       categories: categories,
+      numberOfUsers: json['numberOfUsers'], // initialize to zero
+      rating: json['rating'],
     );
   }
 
@@ -73,6 +81,8 @@ class CityData {
       'population': population,
       'mobile_image_link': mobileImageLink, // add new field
       'categories': categories.map((e) => e.toJson()).toList(),
+      'numberOfUsers': numberOfUsers, // initialize to zero
+      'rating': rating,
     };
   }
 }
@@ -130,22 +140,26 @@ class CityService {
     // Query for lowercase city name
     Query<Map<String, dynamic>> queryLowerCase = citiesCollection
         .where('fullName', isGreaterThanOrEqualTo: cityName.toLowerCase())
-        .where('fullName', isLessThanOrEqualTo: '${cityName.toLowerCase()}\uf8ff');
+        .where('fullName',
+            isLessThanOrEqualTo: '${cityName.toLowerCase()}\uf8ff');
 
 // Query for uppercase city name
     Query<Map<String, dynamic>> queryUpperCase = citiesCollection
         .where('fullName', isGreaterThanOrEqualTo: cityName.toUpperCase())
-        .where('fullName', isLessThanOrEqualTo: '${cityName.toUpperCase()}\uf8ff');
+        .where('fullName',
+            isLessThanOrEqualTo: '${cityName.toUpperCase()}\uf8ff');
 
 // Query for title case city name
     Query<Map<String, dynamic>> queryTitleCase = citiesCollection
         .where('fullName', isGreaterThanOrEqualTo: toTitleCase(cityName))
-        .where('fullName', isLessThanOrEqualTo: '${toTitleCase(cityName)}\uf8ff');
+        .where('fullName',
+            isLessThanOrEqualTo: '${toTitleCase(cityName)}\uf8ff');
 
 // Query for camel case city name
     Query<Map<String, dynamic>> queryCamelCase = citiesCollection
         .where('fullName', isGreaterThanOrEqualTo: toCamelCase(cityName))
-        .where('fullName', isLessThanOrEqualTo: '${toCamelCase(cityName)}\uf8ff');
+        .where('fullName',
+            isLessThanOrEqualTo: '${toCamelCase(cityName)}\uf8ff');
 
 // Execute the queries
     QuerySnapshot<Map<String, dynamic>> snapshotLowerCase =
@@ -247,8 +261,9 @@ class CityService {
       final data = doc.data();
       if (data != null) {
         Map<String, dynamic> city = {
-          'name': data['name'],
-          'categories': data['categories']
+          'fullName': data['fullName'],
+          'score': data['categories'],
+          'userRating': data['rating'],
         };
         cities.add(city);
       }
@@ -265,6 +280,20 @@ class CityService {
     } else {
       // City data does not exist in Firestore, add it
       await docRef.set(cityData.toJson());
+    }
+  }
+
+  Future<CityData?> getCityDataById(String cityId) async {
+    // Get the CityData object from Firestore
+    final docSnapshot =
+        await FirebaseFirestore.instance.collection('City').doc(cityId).get();
+    if (docSnapshot.exists) {
+      final cityDataJson = docSnapshot.data()!;
+      final cityData = CityData.fromJsondoc(cityDataJson);
+      return cityData;
+    } else {
+      // City data does not exist in Firestore
+      return null;
     }
   }
 }

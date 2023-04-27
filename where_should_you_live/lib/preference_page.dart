@@ -99,7 +99,9 @@ class _PreferencePageState extends State<PreferencePage> {
           content: Text('Preferences saved.'),
           action: SnackBarAction(
             label: 'OK',
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, '/home');
+            },
           ),
         ),
       );

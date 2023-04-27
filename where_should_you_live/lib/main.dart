@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:where_should_you_live/firebase_options.dart';
 import 'package:where_should_you_live/homepage.dart';
 import 'package:where_should_you_live/navigationBar.dart';
+import 'package:where_should_you_live/profile.dart';
 import 'package:where_should_you_live/src/features/authentication/screens/onboarding/onboarding_screen.dart';
+import 'package:where_should_you_live/wishlist.dart';
 import 'forgotPassword.dart';
 import './sign_up.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'navigationBar.dart';
 // import './login.dart';
 import './preference_page.dart';
 import 'searchAndFilterView.dart';
@@ -24,8 +28,36 @@ void main() async {
       '/home': (context) => navigationBar(),
       '/forgotPassword': (context) => ForgotPasswordScreen(),
       '/preference': (context) => PreferencePage(),
+      '/profile': (context) => ProfilePage(),
+      '/wishlist': (context) => WishlistPage(),
     },
   ));
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'My App',
+      home: FutureBuilder<bool>(
+        future: isLoggedIn(),
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.data == true) {
+            return navigationBar();
+          } else {
+            return OnBoardingScreen();
+          }
+        },
+      ),
+    );
+  }
+
+  Future<bool> isLoggedIn() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('isLoggedIn') ?? false;
+  }
 }
 
 // class MyPreference extends StatelessWidget {

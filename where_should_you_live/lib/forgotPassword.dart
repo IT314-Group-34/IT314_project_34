@@ -15,7 +15,8 @@ class ForgotPasswordScreen extends StatelessWidget {
         title: const Text('Forgot Password'),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(vertical: screenHeight * 0.05),
+        padding: EdgeInsets.symmetric(
+            vertical: screenHeight * 0.05, horizontal: screenWidth * 0.05),
         child: Form(
           key: _formKey,
           child: Column(
