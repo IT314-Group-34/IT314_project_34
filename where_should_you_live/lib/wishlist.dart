@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'models/user_model.dart';
 import 'models/neibhorhood_model.dart';
 import 'neighborhood_details.dart';
+import 'package:provider/provider.dart';
+import 'userProvider.dart';
 
 class WishlistPage extends StatefulWidget {
   const WishlistPage({Key? key}) : super(key: key);
@@ -17,8 +19,9 @@ class _WishlistPageState extends State<WishlistPage> {
   @override
   void initState() {
     super.initState();
-    _wishlistFuture =
-        FirebaseUserRepository().getWishlist('aditya1234@gmail.com');
+    final UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    _wishlistFuture = FirebaseUserRepository().getWishlist(userProvider.email);
   }
 
   @override

@@ -4,6 +4,8 @@ import 'editprofile.dart';
 import 'constants.dart';
 import 'imagepicker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+import 'userProvider.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -39,6 +41,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 List<String>.from(objUser["wishlist"] ?? []);
             usersEditedData!["wishlist"] = whishlist;
           }
+          final UserProvider userProvider =
+              Provider.of<UserProvider>(context, listen: false);
           return Scaffold(
             appBar: AppBar(
               backgroundColor: Constants.appPurpleColor,
@@ -53,7 +57,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     MaterialPageRoute(
                       builder: (context) => EditProfilePage(
                         objUserData: usersEditedData,
-                        email_ID: 'aditya1234@gmail.com',
+                        email_ID: userProvider.email,
                       ),
                     ));
                 setState(() {
