@@ -14,13 +14,14 @@ import 'navigationBar.dart';
 // import './login.dart';
 import './preference_page.dart';
 import 'searchAndFilterView.dart';
+import './wishlist.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(GetMaterialApp(
     // Replace MaterialApp with GetMaterialApp
-    home: navigationBar(),
+    home: OnBoardingScreen(),
     routes: {
       '/signup': (context) => SignUpPage(),
       // '/login': (context) => const Login(),

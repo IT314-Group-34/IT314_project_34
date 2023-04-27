@@ -1,29 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:where_should_you_live/models/neibhorhood_model.dart'
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      home: SearchPage(),
+    );
+  }
+}
 
 enum ExerciseFilter {
-  filter_1,
-  filter_2,
-  filter_3,
-  filter_4,
-  filter_5,
-  filter_6,
-  filter_7,
-  filter_8,
-  filter_9
+  Housing,
+  Cost_of_Living,
+  Startups,
+  Venture_Capital,
+  Travel_Connectivity,
+  Commute,
+  Business_Freedom,
+  Safety,
+  Healthcare,
+  Education,
+  Environmental_Quality,
+  Economy,
+  Taxation,
+  Internet_Access,
+  Leisure_and_Culture,
+  Tolerance,
+  Outdoors
 }
+
+//-----------------------------------------
 
 class SearchPage extends StatefulWidget {
   @override
   _SearchPageState createState() => _SearchPageState();
 }
 
+//---------------------------------------
+
 class _SearchPageState extends State<SearchPage> {
   static const historyLength = 5;
 
-// The "raw" history that we don't access from the UI, prefilled with values
+  // The "raw" history that we don't access from the UI, prefilled with values
   List<String> _searchHistory = [];
-// The filtered & ordered history that's accessed from the UI
+
+  // The filtered & ordered history that's accessed from the UI
   late List<String> filteredSearchHistory;
   final List<String> _filters = <String>[];
 
@@ -64,7 +97,7 @@ class _SearchPageState extends State<SearchPage> {
     addSearchTerm(term);
   }
 
-// The currently searched-for term
+  // The currently searched-for term
   String? selectedTerm;
   late FloatingSearchBarController controller;
 
@@ -92,23 +125,13 @@ class _SearchPageState extends State<SearchPage> {
           ),
         ),
         transition: CircularFloatingSearchBarTransition(),
-        // Bouncing physics for the search history
         physics: BouncingScrollPhysics(),
-        // Title is displayed on an unopened (inactive) search bar
-        title: Text(
-          selectedTerm ?? 'Search',
-          style: Theme.of(context).textTheme.headline6,
-        ),
-        // Hint gets displayed once the search bar is tapped and opened
+        title: Text(selectedTerm ?? 'Search',
+            style: Theme.of(context).textTheme.headline6),
         hint: 'What are you looking for...',
-        actions: [
-          FloatingSearchBarAction.searchToClear(),
-        ],
-        onQueryChanged: (query) {
-          setState(() {
-            filteredSearchHistory = filterSearchTerms(filter: query);
-          });
-        },
+        actions: [FloatingSearchBarAction.searchToClear()],
+        onQueryChanged: (query) => setState(
+            () => filteredSearchHistory = filterSearchTerms(filter: query)),
         onSubmitted: (query) {
           setState(() {
             addSearchTerm(query);
@@ -117,80 +140,59 @@ class _SearchPageState extends State<SearchPage> {
           controller.close();
         },
         builder: (context, transition) {
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Material(
-              color: Color.fromARGB(255, 252, 252, 252),
-              elevation: 4,
-              child: Builder(
-                builder: (context) {
-                  if (filteredSearchHistory.isEmpty &&
-                      controller.query.isEmpty) {
-                    return Container(
-                      height: 56,
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Start searching',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.caption,
-                      ),
-                    );
-                  } else if (filteredSearchHistory.isEmpty) {
-                    return ListTile(
-                      title: Text(controller.query),
-                      leading: const Icon(Icons.search),
-                      onTap: () {
-                        setState(() {
-                          addSearchTerm(controller.query);
-                          selectedTerm = controller.query;
-                        });
-                        controller.close();
-                      },
-                    );
-                  } else {
-                    return Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: filteredSearchHistory
-                          .map(
-                            (term) => ListTile(
-                              title: Text(
-                                term,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              leading: const Icon(Icons.history),
-                              trailing: IconButton(
-                                icon: const Icon(Icons.clear),
-                                onPressed: () {
-                                  setState(() {
-                                    deleteSearchTerm(term);
-                                  });
-                                },
-                              ),
-                              onTap: () {
-                                setState(() {
-                                  putSearchTermFirst(term);
-                                  selectedTerm = term;
-                                });
-                                controller.close();
-                              },
-                            ),
-                          )
-                          .toList(),
-                    );
-                  }
-                },
-              ),
-            ),
-          );
+          if (filteredSearchHistory.isEmpty && controller.query.isEmpty) {
+            return Container(
+              height: 56,
+              width: double.infinity,
+              alignment: Alignment.center,
+              child: Text('Start searching',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodySmall),
+            );
+          } else if (filteredSearchHistory.isEmpty) {
+            return ListTile(
+              title: Text(controller.query),
+              leading: const Icon(Icons.search),
+              onTap: () {
+                setState(() {
+                  addSearchTerm(controller.query);
+                  selectedTerm = controller.query;
+                });
+                controller.close();
+              },
+            );
+          } else {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: filteredSearchHistory
+                  .map((term) => ListTile(
+                        title: Text(term,
+                            maxLines: 1, overflow: TextOverflow.ellipsis),
+                        leading: const Icon(Icons.history),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () =>
+                              setState(() => deleteSearchTerm(term)),
+                        ),
+                        onTap: () {
+                          setState(() {
+                            putSearchTermFirst(term);
+                            selectedTerm = term;
+                          });
+                          controller.close();
+                        },
+                      ))
+                  .toList(),
+            );
+          }
         },
       ),
     );
   }
 }
 
+//-----------------------------------------
 class SearchResultsListView extends StatefulWidget {
   final String? searchTerm;
 
@@ -203,11 +205,18 @@ class SearchResultsListView extends StatefulWidget {
   State<SearchResultsListView> createState() => _SearchResultsListViewState();
 }
 
+//-----------------------------------------
+
+
 class _SearchResultsListViewState extends State<SearchResultsListView> {
   final List<String> _filters = <String>[];
+  List<Map<int, dynamic>> _neighborDataList = [];
+  bool _loading = false;
+
   @override
   Widget build(BuildContext context) {
     if (widget.searchTerm == null) {
+      // Render the search filters and prompt.
       return SingleChildScrollView(
         child: Column(
           children: [
@@ -242,26 +251,191 @@ class _SearchResultsListViewState extends State<SearchResultsListView> {
             SizedBox(
               height: 400,
               child: Center(
-                  child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.search,
-                    size: 64,
-                  ),
-                  Text(
-                    'Start searching',
-                    style: Theme.of(context).textTheme.headline5,
-                  )
-                ],
-              )),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.search,
+                      size: 64,
+                    ),
+                    Text(
+                      'Start searching',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
       );
+    } else {
+      // Perform the search and update the list of neighborDataList.
+      if (!_loading) {
+        setState(() {
+          _loading = true;
+        });
+        SearchService()
+            .searchNeighborhoods(widget.searchTerm!, _filters)
+            .then((List<Map<int, dynamic>> neighborData) {
+          setState(() {
+            _neighborDataList = neighborData;
+            _loading = false;
+          });
+          print("Neighbor data: $_neighborDataList");
+        }).catchError((error) {
+          setState(() {
+            _neighborDataList = [];
+            _loading = false;
+          });
+        });
+      }
     }
-    final fsb = FloatingSearchBar.of(context);
 
-    return const Scaffold(); // change the return function here
+    // Render the list of search results.
+    if (_loading) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    } else if (_neighborDataList.isEmpty) {
+      return Center(
+        child: Text('No results found.'),
+      );
+    } else {
+      print("Building search results list");
+      return ListView(
+        padding: EdgeInsets.all(16),
+        children: _neighborDataList
+            .map((neighborData) => buildImageInteractionCard1(
+                  neighborData['documentId'], 
+                  neighborData['fullName'], 
+                  neighborData['mobileImageLink'])
+            )
+            .toList(),
+      );
+    }
   }
 }
+
+
+
+
+class SearchService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<List<Map<int, dynamic>>> searchNeighborhoods(
+      String searchQuery, List<String> filters) async {
+    Query query = _firestore.collection('City');
+
+    // Apply search query using where() method
+    if (searchQuery != null && searchQuery.isNotEmpty) {
+      query = query
+          .where('fullName', isGreaterThanOrEqualTo: searchQuery)
+          .where('fullName', isLessThan: searchQuery + 'z');
+    }
+
+    // Apply filters using orderBy() method
+    if (filters != null && filters.isNotEmpty) {
+      for (String filter in filters) {
+        query = query.orderBy('categories.$filter.score_out_of_10', descending: true);
+      }
+    }
+
+    try {
+      QuerySnapshot querySnapshot = await query.get();
+      List<Map<int, dynamic>> neighborhoods = [];
+      for (DocumentSnapshot doc in querySnapshot.docs) {
+        Map<int, dynamic> neighborhood = {
+          int.tryParse(doc.id) ?? 0: {
+            'fullName': (doc.data() as Map<String, dynamic>)['fullName'] as String,
+            'mobileImageLink': (doc.data() as Map<String, dynamic>)['mobile_image_link'] as String,
+          }
+        };
+        neighborhoods.add(neighborhood);
+      }
+      return neighborhoods;
+    } catch (error) {
+      print('Error in searchNeighborhoods: $error');
+      return [];
+    }
+  }
+}
+
+
+
+
+Widget buildImageInteractionCard1(int documentId, String fullName, String mobileImageLink) {
+  return Card(
+    clipBehavior: Clip.antiAlias,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(24),
+    ),
+    child: Column(
+      children: [
+        Stack(
+          children: [
+            Ink.image(
+              image: NetworkImage(mobileImageLink),
+              child: InkWell(
+                onTap: () {},
+              ),
+              height: 240,
+              fit: BoxFit.cover,
+            ),
+            Positioned(
+              bottom: 16,
+              right: 16,
+              left: 16,
+              child: Text(
+                fullName,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+          ],
+        ),
+        Padding(
+          padding: EdgeInsets.all(16).copyWith(bottom: 0),
+          child: Text(
+            documentId as String,
+            style: TextStyle(fontSize: 16),
+          ),
+        ),
+        ButtonBar(
+          alignment: MainAxisAlignment.start,
+          children: [
+            MaterialButton(
+              child: Text('More Details'),
+              onPressed: () {},
+            ),
+          ],
+        )
+      ],
+    ),
+  );
+}
+
+
+
+
+
+//---------------------------------------------
+
+
+// class SearchAndFilterView extends StatefulWidget {
+//   // ...
+// }
+
+// class _SearchAndFilterViewState extends State<SearchAndFilterView> {
+//   TextEditingController _searchController = TextEditingController();
+//   // Filter state variables
+
+
+//   @override
+//   Widget build(BuildContext context) {
+//     // Build search bar and filter buttons
+//   }
+// }

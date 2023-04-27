@@ -56,6 +56,18 @@ class User {
 class FirebaseUserRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  Future<User?> getUser(String email) async {
+    final DocumentReference userRef = _firestore.collection('users').doc(email);
+    final DocumentSnapshot snapshot = await userRef.get();
+    final Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+
+    if (data != null) {
+      return User.fromJson(data);
+    } else {
+      return null;
+    }
+  }
+
   Future<void> addUser(User user) async {
     final DocumentReference userRef =
         _firestore.collection('users').doc(user.email);
@@ -76,14 +88,13 @@ class FirebaseUserRepository {
     await userRef.delete();
   }
 
-  Future<List<Map<String, dynamic>>> getWishlist(String email) async {
+  Future<List<String>> getWishlist(String email) async {
     final DocumentReference userRef = _firestore.collection('users').doc(email);
     final DocumentSnapshot snapshot = await userRef.get();
     final Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
 
     return data?['wishlist'] != null
-        ? List<Map<String, dynamic>>.from(
-            data!['wishlist'].map((item) => {'cityId': item}))
+        ? List<String>.from(data!['wishlist'])
         : [];
   }
 
