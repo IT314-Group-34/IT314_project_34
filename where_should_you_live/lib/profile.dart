@@ -6,6 +6,8 @@ import 'imagepicker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'userProvider.dart';
+import 'package:provider/provider.dart';
+import 'userProvider.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -20,9 +22,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
     return StreamBuilder(
-        stream:
-            users.where('email', isEqualTo: 'aditya1234@gmail.com').snapshots(),
+        stream: users.where('email', isEqualTo: userProvider.email).snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
             QueryDocumentSnapshot<Object?> objUser = snapshot.data!.docs.last;

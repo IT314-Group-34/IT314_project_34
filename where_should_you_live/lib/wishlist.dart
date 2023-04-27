@@ -6,16 +6,6 @@ import 'neighborhood_details.dart';
 import 'package:provider/provider.dart';
 import 'userProvider.dart';
 
-
-String email='aditya1234@gmail.com';
-
-void main() async{
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(WishlistPage());
-}
-
-
 class WishlistPage extends StatefulWidget {
   const WishlistPage({Key? key}) : super(key: key);
 
@@ -29,8 +19,10 @@ class _WishlistPageState extends State<WishlistPage> {
   @override
   void initState() {
     super.initState();
-    _wishlistFuture =
-        FirebaseUserRepository().getWishlist(email);
+    final UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    String email = userProvider.email;
+    _wishlistFuture = FirebaseUserRepository().getWishlist(email);
   }
 
   @override
@@ -77,21 +69,24 @@ class _SelectableCardState extends State<SelectableCard> {
   final FirebaseUserRepository f1 = FirebaseUserRepository();
   bool _isSelected = false;
   bool _isWishlist = true;
-  int id=0;
-  double ratings=0;
-  int users=0;
-  int total=0;
+  int id = 0;
+  double ratings = 0;
+  int users = 0;
+  int total = 0;
 
   @override
   void initState() {
     super.initState();
     _cityDataFuture =
         CityService().getCityDataById(widget.cityId.replaceAll(' ', ''));
-      id=int.parse(widget.cityId);
+    id = int.parse(widget.cityId);
   }
 
   @override
   Widget build(BuildContext context) {
+    final UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    String email = userProvider.email;
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -110,9 +105,9 @@ class _SelectableCardState extends State<SelectableCard> {
           builder: (context, snapshot) {
             if (snapshot.hasData && snapshot.data != null) {
               final cityData = snapshot.data!;
-              users=cityData.numberOfUsers;
-              total=cityData.rating;
-              ratings=total.toDouble() / users;
+              users = cityData.numberOfUsers;
+              total = cityData.rating;
+              ratings = total.toDouble() / users;
               return Column(
                 children: [
                   Stack(
@@ -134,15 +129,16 @@ class _SelectableCardState extends State<SelectableCard> {
                             setState(() {
                               _isWishlist = !_isWishlist;
                             });
-                            if(!_isWishlist){
-                             f1.removeFromWishlist(email, id);}
-                             //setState(() {});
-                             Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                       builder: (context) => WishlistPage(),
-                        ),
-                        );
+                            if (!_isWishlist) {
+                              f1.removeFromWishlist(email, id);
+                            }
+                            //setState(() {});
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => WishlistPage(),
+                              ),
+                            );
                           },
                           icon: Icon(
                             _isWishlist
