@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:where_should_you_live/city_rating.dart';
 import 'models/user_model.dart';
 import 'models/neibhorhood_model.dart';
 import 'neighborhood_details.dart';
@@ -92,7 +93,8 @@ class _SelectableCardState extends State<SelectableCard> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => NeighborhoodStatisticsPage(),
+            builder: (context) =>
+                NeighborhoodStatisticsPage(sentString: cityName),
           ),
         );
       },

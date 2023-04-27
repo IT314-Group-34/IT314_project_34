@@ -11,7 +11,7 @@ import 'models/user_model.dart';
 import 'package:provider/provider.dart';
 import 'userProvider.dart';
 
-String cityName = 'mumbai';
+String cityName = '';
 int id = 0;
 
 class RatingWidget extends StatefulWidget {
@@ -116,7 +116,8 @@ class _RatingWidgetState extends State<RatingWidget> {
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => NeighborhoodStatisticsPage()),
+                      builder: (context) =>
+                          NeighborhoodStatisticsPage(sentString: cityName)),
                 );
               },
               child: const Text('SUBMIT'),
@@ -329,6 +330,10 @@ _NeighborhoodStatisticsPageState createState() =>
 int city_id = 0;
 
 class NeighborhoodStatisticsPage extends StatefulWidget {
+  final String sentString;
+
+  NeighborhoodStatisticsPage({required this.sentString});
+
   @override
   _NeighborhoodStatisticsPageState createState() =>
       _NeighborhoodStatisticsPageState();
@@ -376,6 +381,7 @@ class _NeighborhoodStatisticsPageState
 
   @override
   void initState() {
+    cityName = widget.sentString;
     super.initState();
     _getCityData();
   }
@@ -687,7 +693,9 @@ class _EditFactorsScreenState extends State<EditFactorsScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    NeighborhoodStatisticsPage()),
+                                    NeighborhoodStatisticsPage(
+                                      sentString: cityName,
+                                    )),
                           );
                         },
                         child: Text('Save Changes'),
@@ -723,8 +731,4 @@ class _EditFactorsScreenState extends State<EditFactorsScreen> {
       ],
     );
   }
-}
-
-Future<void> main() async {
-  runApp(MaterialApp(home: NeighborhoodStatisticsPage()));
 }
