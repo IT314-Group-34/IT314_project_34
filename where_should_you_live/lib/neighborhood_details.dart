@@ -7,6 +7,9 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'dart:ui';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'models/user_model.dart';
 
 String cityName = 'mumbai';
 String email = 'aditya1234@gmail.com';
