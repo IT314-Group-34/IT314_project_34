@@ -3,14 +3,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 
 class CityData {
-  final String fullName;
-  final int geonameId;
-  final String geohash;
-  final double latitude;
-  final double longitude;
-  final int population;
+  String fullName;
+  int geonameId;
+  String geohash;
+  double latitude;
+  double longitude;
+  int population;
   String mobileImageLink; // new field
   List<CategoryScore> categories;
+  int numberOfUsers; // new field
+  int rating;
 
   CityData({
     required this.fullName,
@@ -21,6 +23,8 @@ class CityData {
     required this.population,
     required this.mobileImageLink,
     required this.categories,
+    required this.numberOfUsers,
+    required this.rating,
   });
 
   factory CityData.fromJson(Map<String, dynamic> json) {
@@ -40,26 +44,53 @@ class CityData {
       population: json['population'] ?? 0,
       mobileImageLink: '', // initialize to empty string
       categories: categories,
+      numberOfUsers: 0, // initialize to zero
+      rating: 0,
+    );
+  }
+
+  factory CityData.fromJsondoc(Map<String, dynamic> json) {
+    List<CategoryScore> categories = [];
+    if (json['categories'] != null) {
+      categories = (json['categories'] as List)
+          .map((e) => CategoryScore.fromJson(e))
+          .toList();
+    }
+
+    return CityData(
+      fullName: json['fullName'] ?? '',
+      geonameId: json['city_id'] ?? 0,
+      geohash: json['geohash'] ?? '',
+      latitude: json['latitude'] ?? 0,
+      longitude: json['longitude'] ?? 0,
+      population: json['population'] ?? 0,
+      mobileImageLink: json['mobile_image_link'], // initialize to empty string
+      categories: categories,
+      numberOfUsers: json['numberOfUsers'], // initialize to zero
+      rating: json['rating'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'name': fullName,
+      'fullName': fullName,
       'city_id': geonameId,
+      'geohash': geohash,
       'latitude': latitude,
       'longitude': longitude,
       'population': population,
       'mobile_image_link': mobileImageLink, // add new field
       'categories': categories.map((e) => e.toJson()).toList(),
+      'numberOfUsers': numberOfUsers, // initialize to zero
+      'rating': rating,
     };
   }
 }
 
 class CategoryScore {
-  final String color;
-  final String name;
-  final double score;
+  String color;
+  String name;
+  double score;
 
   CategoryScore({
     required this.color,
@@ -91,16 +122,85 @@ class CityService {
 
   var urbanAreaUrl;
 
+  String toTitleCase(String str) {
+    return str
+        .toLowerCase()
+        .split(' ')
+        .map((word) => word.replaceFirst(word[0], word[0].toUpperCase()))
+        .join(' ');
+  }
+
+  String toCamelCase(String str) {
+    String titleCase = toTitleCase(str);
+    return titleCase.replaceFirst(titleCase[0], titleCase[0].toLowerCase());
+  }
+
   Future<CityData?> getCityData(String cityName) async {
     // Check if city data already exists in Firestore
-    QuerySnapshot<Map<String, dynamic>> querySnapshot =
-        await citiesCollection.where('name', isEqualTo: cityName).get();
-    if (querySnapshot.docs.isNotEmpty) {
-      // City data already exists in Firestore, return it
-      DocumentSnapshot<Map<String, dynamic>> doc = querySnapshot.docs.first;
+    // Query for lowercase city name
+    Query<Map<String, dynamic>> queryLowerCase = citiesCollection
+        .where('fullName', isGreaterThanOrEqualTo: cityName.toLowerCase())
+        .where('fullName',
+            isLessThanOrEqualTo: '${cityName.toLowerCase()}\uf8ff');
+
+// Query for uppercase city name
+    Query<Map<String, dynamic>> queryUpperCase = citiesCollection
+        .where('fullName', isGreaterThanOrEqualTo: cityName.toUpperCase())
+        .where('fullName',
+            isLessThanOrEqualTo: '${cityName.toUpperCase()}\uf8ff');
+
+// Query for title case city name
+    Query<Map<String, dynamic>> queryTitleCase = citiesCollection
+        .where('fullName', isGreaterThanOrEqualTo: toTitleCase(cityName))
+        .where('fullName',
+            isLessThanOrEqualTo: '${toTitleCase(cityName)}\uf8ff');
+
+// Query for camel case city name
+    Query<Map<String, dynamic>> queryCamelCase = citiesCollection
+        .where('fullName', isGreaterThanOrEqualTo: toCamelCase(cityName))
+        .where('fullName',
+            isLessThanOrEqualTo: '${toCamelCase(cityName)}\uf8ff');
+
+// Execute the queries
+    QuerySnapshot<Map<String, dynamic>> snapshotLowerCase =
+        await queryLowerCase.get();
+    QuerySnapshot<Map<String, dynamic>> snapshotUpperCase =
+        await queryUpperCase.get();
+    QuerySnapshot<Map<String, dynamic>> snapshotTitleCase =
+        await queryTitleCase.get();
+    QuerySnapshot<Map<String, dynamic>> snapshotCamelCase =
+        await queryCamelCase.get();
+
+// Check if any of the queries returned results
+    if (snapshotLowerCase.docs.isNotEmpty) {
+      DocumentSnapshot<Map<String, dynamic>> doc = snapshotLowerCase.docs.first;
       final data = doc.data();
       if (data != null) {
-        return CityData.fromJson(data);
+        return CityData.fromJsondoc(data);
+      } else {
+        return null;
+      }
+    } else if (snapshotUpperCase.docs.isNotEmpty) {
+      DocumentSnapshot<Map<String, dynamic>> doc = snapshotUpperCase.docs.first;
+      final data = doc.data();
+      if (data != null) {
+        return CityData.fromJsondoc(data);
+      } else {
+        return null;
+      }
+    } else if (snapshotTitleCase.docs.isNotEmpty) {
+      DocumentSnapshot<Map<String, dynamic>> doc = snapshotTitleCase.docs.first;
+      final data = doc.data();
+      if (data != null) {
+        return CityData.fromJsondoc(data);
+      } else {
+        return null;
+      }
+    } else if (snapshotCamelCase.docs.isNotEmpty) {
+      DocumentSnapshot<Map<String, dynamic>> doc = snapshotCamelCase.docs.first;
+      final data = doc.data();
+      if (data != null) {
+        return CityData.fromJsondoc(data);
       } else {
         return null;
       }
@@ -153,17 +253,48 @@ class CityService {
     }
   }
 
-  Future<List<String>> getAllCityNamesFromFirestore() async {
+  Future<List<Map<String, dynamic>>> getAllCitiesFromFirestore() async {
     QuerySnapshot<Map<String, dynamic>> querySnapshot =
         await citiesCollection.get();
-    List<String> cityNames = [];
+    List<Map<String, dynamic>> cities = [];
     for (DocumentSnapshot<Map<String, dynamic>> doc in querySnapshot.docs) {
       final data = doc.data();
       if (data != null) {
-        cityNames.add(data['name']);
+        Map<String, dynamic> city = {
+          'fullName': data['fullName'],
+          'score': data['categories'],
+          'userRating': data['rating'],
+        };
+        cities.add(city);
       }
     }
-    return cityNames;
+    return cities;
+  }
+
+  Future<void> updateCityData(CityData cityData) async {
+    final docRef = citiesCollection.doc(cityData.geonameId.toString());
+    final doc = await docRef.get();
+    if (doc.exists) {
+      // City data already exists in Firestore, update it
+      await docRef.update(cityData.toJson());
+    } else {
+      // City data does not exist in Firestore, add it
+      await docRef.set(cityData.toJson());
+    }
+  }
+
+  Future<CityData?> getCityDataById(String cityId) async {
+    // Get the CityData object from Firestore
+    final docSnapshot =
+        await FirebaseFirestore.instance.collection('City').doc(cityId).get();
+    if (docSnapshot.exists) {
+      final cityDataJson = docSnapshot.data()!;
+      final cityData = CityData.fromJsondoc(cityDataJson);
+      return cityData;
+    } else {
+      // City data does not exist in Firestore
+      return null;
+    }
   }
 }
 
@@ -188,3 +319,14 @@ class CityService {
 // // (Assuming that cityData is not null)
 // // ${cityData!.fullName}
 
+//usage: getallcitydata
+// final CityService _cityService = CityService();
+//   late List<Map<String, dynamic>> _cities;
+
+//   Future<void> _loadCities() async {
+//     final cities = await _cityService.getAllCitiesFromFirestore();
+//     setState(() {
+//       _cities = cities;
+//     });
+//     city['categories'][0]['score_out_of_10'].toString()
+//     city['name']

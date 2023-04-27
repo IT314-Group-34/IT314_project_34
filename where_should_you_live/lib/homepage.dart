@@ -5,8 +5,8 @@ class Homepage extends StatefulWidget {
   @override
   _HomepageState createState() => _HomepageState();
 }
-class _HomepageState extends State<Homepage>{
 
+class _HomepageState extends State<Homepage> {
   Widget func({required String url, required String value}) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 5),
@@ -48,7 +48,6 @@ class _HomepageState extends State<Homepage>{
       ),
     );
   }
-
 
   Widget list({required IconData icon, required String title}) {
     return ListTile(
@@ -100,12 +99,26 @@ class _HomepageState extends State<Homepage>{
                   ],
                 ),
               ),
-              list(icon: Icons.person, title: "View Profile"),
-              list(icon: Icons.info, title: "About Us"),
-              list(icon: Icons.contact_phone, title: "Contact Us"),
-              list(icon: Icons.favorite, title: "Wishlist"),
-              list(icon: Icons.feedback, title: "Feedback"),
-              list(icon: Icons.settings, title: "Settings"),
+              GestureDetector(
+                onTap: () {
+                  // Navigate to profile page
+                  Navigator.pushNamed(context, '/profile');
+                },
+                child: ListTile(
+                  leading: Icon(Icons.person),
+                  title: Text('View Profile'),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  // Navigate to wishlist page
+                  Navigator.pushNamed(context, '/wishlist');
+                },
+                child: ListTile(
+                  leading: Icon(Icons.favorite),
+                  title: Text('Wishlist'),
+                ),
+              ),
             ],
           ),
         ),
@@ -119,20 +132,6 @@ class _HomepageState extends State<Homepage>{
           ),
         ),
         backgroundColor: Colors.blue,
-        actions: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: MaterialButton(
-                color: Colors.tealAccent,
-                onPressed: (){},
-                textColor: Colors.white,
-                child: Text('Log in'),
-              ),
-            ),
-          )
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),

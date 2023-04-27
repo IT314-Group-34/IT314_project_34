@@ -47,6 +47,7 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
+<<<<<<< HEAD
     apiKey: 'AIzaSyD9fpXBtPRU8X10M6uKuMbVvZgpQzM25CE',
     appId: '1:700216601439:web:0430dac8f269b9f530a4ea',
     messagingSenderId: '700216601439',
@@ -74,5 +75,46 @@ class DefaultFirebaseOptions {
     storageBucket: 'profileapp-de82a.appspot.com',
     iosClientId: '700216601439-o6smegf6sd41b301tegf4vp86j893g3k.apps.googleusercontent.com',
     iosBundleId: 'com.example.userapp',
+=======
+    apiKey: 'AIzaSyBCDnynd1XzNWyN0k6QmZAMulUH4Mewgd0',
+    appId: '1:625745952057:web:d73a9b9538fac51cabbce8',
+    messagingSenderId: '625745952057',
+    projectId: 'whereshouldyoulive-1e51b',
+    authDomain: 'whereshouldyoulive-1e51b.firebaseapp.com',
+    databaseURL: 'https://whereshouldyoulive-1e51b-default-rtdb.firebaseio.com',
+    storageBucket: 'whereshouldyoulive-1e51b.appspot.com',
+    measurementId: 'G-D5RXB8WN9M',
+  );
+
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyDBx6ClpNicDmIqP9eNtcoknpxDGxEiDig',
+    appId: '1:625745952057:android:b1be33636ef47cbcabbce8',
+    messagingSenderId: '625745952057',
+    projectId: 'whereshouldyoulive-1e51b',
+    databaseURL: 'https://whereshouldyoulive-1e51b-default-rtdb.firebaseio.com',
+    storageBucket: 'whereshouldyoulive-1e51b.appspot.com',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyAztBuO_eyaAi1Bcw2dr3m2JGMQ207-0IU',
+    appId: '1:625745952057:ios:f15af43c9329b106abbce8',
+    messagingSenderId: '625745952057',
+    projectId: 'whereshouldyoulive-1e51b',
+    databaseURL: 'https://whereshouldyoulive-1e51b-default-rtdb.firebaseio.com',
+    storageBucket: 'whereshouldyoulive-1e51b.appspot.com',
+    iosClientId: '625745952057-gfagi3a81cgdrqpquv8eei7if5ighv7o.apps.googleusercontent.com',
+    iosBundleId: 'com.example.whereShouldYouLive',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyAztBuO_eyaAi1Bcw2dr3m2JGMQ207-0IU',
+    appId: '1:625745952057:ios:f15af43c9329b106abbce8',
+    messagingSenderId: '625745952057',
+    projectId: 'whereshouldyoulive-1e51b',
+    databaseURL: 'https://whereshouldyoulive-1e51b-default-rtdb.firebaseio.com',
+    storageBucket: 'whereshouldyoulive-1e51b.appspot.com',
+    iosClientId: '625745952057-gfagi3a81cgdrqpquv8eei7if5ighv7o.apps.googleusercontent.com',
+    iosBundleId: 'com.example.whereShouldYouLive',
+>>>>>>> cc754e5be13cd74889f7e0d45593ae1eef0a72bb
   );
 }

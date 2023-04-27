@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
 import 'wishlist.dart';
+import 'homepage.dart';
+import 'searchAndFilterView.dart';
+import 'profile.dart';
 
 class navigationBar extends StatefulWidget {
   @override
@@ -8,12 +11,12 @@ class navigationBar extends StatefulWidget {
 }
 
 class _MyAppState extends State<navigationBar> {
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
 
   final screens = [
-    MyHomePage(),
-    WishlistPage(),
-    MyHomePage(),
+    Homepage(),
+    SearchPage(),
+    ProfilePage(),
     WishlistPage(),
   ];
   void _onItemTapped(int index) {
