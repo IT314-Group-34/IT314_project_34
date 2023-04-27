@@ -109,6 +109,11 @@ class _RatingWidgetState extends State<RatingWidget> {
                 // cityData?.numberOfUsers += 1;
                 // await cityService.updateCityData(cityData!);
                 await citydatabase.updateSumAndCount(cityName, _rating, 1);
+
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NeighborhoodStatisticsPage()),
+              );
               },
               child: const Text('SUBMIT'),
             ),
@@ -666,10 +671,10 @@ class _EditFactorsScreenState extends State<EditFactorsScreen> {
                           // Use the CityService object to update city data for the current city name
                           await cityService.updateCityData(cityData!);
 
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(builder: (context) => NeighborhoodStatisticsPage()),
-                          // );
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => NeighborhoodStatisticsPage()),
+                          );
                         },
                         child: Text('Save Changes'),
                       );
