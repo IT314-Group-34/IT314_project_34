@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'main.dart';
 import 'wishlist.dart';
 import 'homepage.dart';
+import 'models/user_model.dart';
 import 'searchAndFilterView.dart';
 import 'profile.dart';
+import 'firebase_options.dart';
 
 class navigationBar extends StatefulWidget {
   @override
