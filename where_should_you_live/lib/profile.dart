@@ -19,10 +19,11 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: users.snapshots(),
+        stream:
+            users.where('email', isEqualTo: 'aditya1234@gmail.com').snapshots(),
         builder: (context, snapshot) {
-          if (snapshot.data?.docs.isNotEmpty ?? false) {
-            QueryDocumentSnapshot<Object?>? objUser = snapshot.data!.docs.last;
+          if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+            QueryDocumentSnapshot<Object?> objUser = snapshot.data!.docs.last;
             usersEditedData = {};
             usersEditedData!["name"] = objUser["firstName"];
             usersEditedData!["occupation"] = objUser["occupation"];
@@ -30,6 +31,13 @@ class _ProfilePageState extends State<ProfilePage> {
             usersEditedData!["height"] = objUser["height"];
             usersEditedData!["ethnicity"] = objUser["ethnicity"];
             usersEditedData!["religion"] = objUser["religion"];
+            usersEditedData!["lastName"] = objUser["lastName"];
+            usersEditedData!["email"] = objUser['email'];
+            usersEditedData!["lastName"] = objUser['lastName'];
+
+            List<String> whishlist =
+                List<String>.from(objUser["wishlist"] ?? []);
+            usersEditedData!["wishlist"] = whishlist;
           }
           return Scaffold(
             appBar: AppBar(
@@ -45,6 +53,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     MaterialPageRoute(
                       builder: (context) => EditProfilePage(
                         objUserData: usersEditedData,
+                        email_ID: 'aditya1234@gmail.com',
                       ),
                     ));
                 setState(() {
