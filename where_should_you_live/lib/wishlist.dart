@@ -5,9 +5,7 @@ import 'models/neibhorhood_model.dart';
 import 'neighborhood_details.dart';
 
 class WishlistPage extends StatefulWidget {
-  final User user;
-
-  const WishlistPage({Key? key, required this.user}) : super(key: key);
+  const WishlistPage({Key? key}) : super(key: key);
 
   @override
   _WishlistPageState createState() => _WishlistPageState();

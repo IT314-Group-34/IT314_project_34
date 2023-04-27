@@ -20,7 +20,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final minTextFieldWidth = 250.0;
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Where Should You Live'),

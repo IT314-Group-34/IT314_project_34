@@ -24,7 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
           if (snapshot.data?.docs.isNotEmpty ?? false) {
             QueryDocumentSnapshot<Object?>? objUser = snapshot.data!.docs.last;
             usersEditedData = {};
-            usersEditedData!["name"] = objUser["name"];
+            usersEditedData!["name"] = objUser["firstName"];
             usersEditedData!["occupation"] = objUser["occupation"];
             usersEditedData!["age"] = objUser["age"];
             usersEditedData!["height"] = objUser["height"];
