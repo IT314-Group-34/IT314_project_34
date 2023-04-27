@@ -7,13 +7,13 @@ import 'package:flutter/foundation.dart'
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
 /// Example:
-/// ```dart
+/// dart
 /// import 'firebase_options.dart';
 /// // ...
 /// await Firebase.initializeApp(
 ///   options: DefaultFirebaseOptions.currentPlatform,
 /// );
-/// ```
+///
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
@@ -21,10 +21,7 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for android - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return android;
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
@@ -47,35 +44,6 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-<<<<<<< HEAD
-    apiKey: 'AIzaSyD9fpXBtPRU8X10M6uKuMbVvZgpQzM25CE',
-    appId: '1:700216601439:web:0430dac8f269b9f530a4ea',
-    messagingSenderId: '700216601439',
-    projectId: 'profileapp-de82a',
-    authDomain: 'profileapp-de82a.firebaseapp.com',
-    storageBucket: 'profileapp-de82a.appspot.com',
-    measurementId: 'G-4S0Q43M1R3',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAr5jJh_2Z4Tu-FiOY7dMLTh3FU-AnQm2s',
-    appId: '1:700216601439:ios:d72d19be00322edf30a4ea',
-    messagingSenderId: '700216601439',
-    projectId: 'profileapp-de82a',
-    storageBucket: 'profileapp-de82a.appspot.com',
-    iosClientId: '700216601439-o6smegf6sd41b301tegf4vp86j893g3k.apps.googleusercontent.com',
-    iosBundleId: 'com.example.userapp',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAr5jJh_2Z4Tu-FiOY7dMLTh3FU-AnQm2s',
-    appId: '1:700216601439:ios:d72d19be00322edf30a4ea',
-    messagingSenderId: '700216601439',
-    projectId: 'profileapp-de82a',
-    storageBucket: 'profileapp-de82a.appspot.com',
-    iosClientId: '700216601439-o6smegf6sd41b301tegf4vp86j893g3k.apps.googleusercontent.com',
-    iosBundleId: 'com.example.userapp',
-=======
     apiKey: 'AIzaSyBCDnynd1XzNWyN0k6QmZAMulUH4Mewgd0',
     appId: '1:625745952057:web:d73a9b9538fac51cabbce8',
     messagingSenderId: '625745952057',
@@ -102,7 +70,8 @@ class DefaultFirebaseOptions {
     projectId: 'whereshouldyoulive-1e51b',
     databaseURL: 'https://whereshouldyoulive-1e51b-default-rtdb.firebaseio.com',
     storageBucket: 'whereshouldyoulive-1e51b.appspot.com',
-    iosClientId: '625745952057-gfagi3a81cgdrqpquv8eei7if5ighv7o.apps.googleusercontent.com',
+    iosClientId:
+        '625745952057-gfagi3a81cgdrqpquv8eei7if5ighv7o.apps.googleusercontent.com',
     iosBundleId: 'com.example.whereShouldYouLive',
   );
 
@@ -113,8 +82,8 @@ class DefaultFirebaseOptions {
     projectId: 'whereshouldyoulive-1e51b',
     databaseURL: 'https://whereshouldyoulive-1e51b-default-rtdb.firebaseio.com',
     storageBucket: 'whereshouldyoulive-1e51b.appspot.com',
-    iosClientId: '625745952057-gfagi3a81cgdrqpquv8eei7if5ighv7o.apps.googleusercontent.com',
+    iosClientId:
+        '625745952057-gfagi3a81cgdrqpquv8eei7if5ighv7o.apps.googleusercontent.com',
     iosBundleId: 'com.example.whereShouldYouLive',
->>>>>>> cc754e5be13cd74889f7e0d45593ae1eef0a72bb
   );
 }

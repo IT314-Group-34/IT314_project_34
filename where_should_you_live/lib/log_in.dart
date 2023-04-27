@@ -3,6 +3,8 @@ import './sign_up.dart';
 import 'forgotPassword.dart';
 import 'auth.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:provider/provider.dart';
+import 'userProvider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -20,6 +22,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final minTextFieldWidth = 250.0;
+    final UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text('Where Should You Live'),
@@ -68,6 +72,9 @@ class _LoginPageState extends State<LoginPage> {
                       return 'Please enter a valid email address';
                     }
                     return null;
+                  },
+                  onChanged: (String value) {
+                    userProvider.email = value;
                   },
                   onSaved: (value) {
                     // save the value to the email variable
