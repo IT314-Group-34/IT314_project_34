@@ -7,17 +7,17 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'dart:ui';
-import 'package:firebase_auth/firebase_auth.dart';
-
 import 'models/user_model.dart';
+import 'package:provider/provider.dart';
+import 'userProvider.dart';
 
-String cityName = 'mumbai';
-String email = 'aditya1234@gmail.com';
-int id=0;
+String cityName = '';
+int id = 0;
 
 class RatingWidget extends StatefulWidget {
   final CityService cityService = CityService();
   final CityDatabase citydatabase = CityDatabase();
+
   CityData? cityData;
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -112,6 +112,13 @@ class _RatingWidgetState extends State<RatingWidget> {
                 // cityData?.numberOfUsers += 1;
                 // await cityService.updateCityData(cityData!);
                 await citydatabase.updateSumAndCount(cityName, _rating, 1);
+
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          NeighborhoodStatisticsPage(sentString: cityName)),
+                );
               },
               child: const Text('SUBMIT'),
             ),
@@ -267,18 +274,21 @@ class _FavoriteIconState extends State<FavoriteIcon> {
   final FirebaseUserRepository f1 = FirebaseUserRepository();
   CityData? cityData;
   late Future<List<String>> list1;
-  String s='';
+  String s = '';
 
   @override
   void initState() {
+    final UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    String email = userProvider.email;
     super.initState();
-    _getCityData();
+    _getCityData(email);
   }
-  
-  Future<void> _getCityData() async {
+
+  Future<void> _getCityData(String email) async {
     cityData = await cityService.getCityData(cityName);
-    id=cityData!.geonameId;
-    s=id.toString();
+    id = cityData!.geonameId;
+    s = id.toString();
     list1 = f1.getWishlist(email);
     list1.then((list) {
       flag = list.contains(s);
@@ -290,6 +300,9 @@ class _FavoriteIconState extends State<FavoriteIcon> {
 
   @override
   Widget build(BuildContext context) {
+    final UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    String email = userProvider.email;
     return IconButton(
       icon: Icon(
         _isFavorite ? Icons.favorite : Icons.favorite_border,
@@ -299,7 +312,9 @@ class _FavoriteIconState extends State<FavoriteIcon> {
         setState(() {
           _isFavorite = !_isFavorite;
         });
-        _isFavorite ? f1.addToWishlist(email,id) : f1.removeFromWishlist(email, id);
+        _isFavorite
+            ? f1.addToWishlist(email, id)
+            : f1.removeFromWishlist(email, id);
       },
     );
   }
@@ -315,6 +330,10 @@ _NeighborhoodStatisticsPageState createState() =>
 int city_id = 0;
 
 class NeighborhoodStatisticsPage extends StatefulWidget {
+  final String sentString;
+
+  NeighborhoodStatisticsPage({required this.sentString});
+
   @override
   _NeighborhoodStatisticsPageState createState() =>
       _NeighborhoodStatisticsPageState();
@@ -362,6 +381,7 @@ class _NeighborhoodStatisticsPageState
 
   @override
   void initState() {
+    cityName = widget.sentString;
     super.initState();
     _getCityData();
   }
@@ -530,7 +550,7 @@ class _EditFactorsScreenState extends State<EditFactorsScreen> {
   Future<void> _getCityData() async {
     // Use the CityService object to get city data for the current city name
     cityData = await cityService.getCityData(cityName);
-    
+
     // Trigger a UI update
     setState(() {});
   }
@@ -669,10 +689,14 @@ class _EditFactorsScreenState extends State<EditFactorsScreen> {
                           // Use the CityService object to update city data for the current city name
                           await cityService.updateCityData(cityData!);
 
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(builder: (context) => NeighborhoodStatisticsPage()),
-                          // );
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    NeighborhoodStatisticsPage(
+                                      sentString: cityName,
+                                    )),
+                          );
                         },
                         child: Text('Save Changes'),
                       );
@@ -707,8 +731,4 @@ class _EditFactorsScreenState extends State<EditFactorsScreen> {
       ],
     );
   }
-}
-
-Future<void> main() async {
-  runApp(MaterialApp(home: NeighborhoodStatisticsPage()));
 }

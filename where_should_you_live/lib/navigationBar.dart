@@ -6,6 +6,8 @@ import 'models/user_model.dart';
 import 'searchAndFilterView.dart';
 import 'profile.dart';
 import 'firebase_options.dart';
+import 'userProvider.dart';
+import 'package:provider/provider.dart';
 
 class navigationBar extends StatefulWidget {
   @override
@@ -29,6 +31,8 @@ class _MyAppState extends State<navigationBar> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+    print(userProvider.email);
     return MaterialApp(
       home: Scaffold(
         body: Center(

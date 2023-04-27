@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:where_should_you_live/city_rating.dart';
 import 'models/user_model.dart';
 import 'models/neibhorhood_model.dart';
 import 'neighborhood_details.dart';
+import 'package:provider/provider.dart';
+import 'userProvider.dart';
 
 class WishlistPage extends StatefulWidget {
   const WishlistPage({Key? key}) : super(key: key);
@@ -17,8 +20,10 @@ class _WishlistPageState extends State<WishlistPage> {
   @override
   void initState() {
     super.initState();
-    _wishlistFuture =
-        FirebaseUserRepository().getWishlist('aditya1234@gmail.com');
+    final UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    String email = userProvider.email;
+    _wishlistFuture = FirebaseUserRepository().getWishlist(email);
   }
 
   @override
@@ -62,24 +67,34 @@ class SelectableCard extends StatefulWidget {
 
 class _SelectableCardState extends State<SelectableCard> {
   late Future<CityData?> _cityDataFuture;
+  final FirebaseUserRepository f1 = FirebaseUserRepository();
   bool _isSelected = false;
-  bool _isWishlist = false;
+  bool _isWishlist = true;
+  int id = 0;
+  double ratings = 0;
+  int users = 0;
+  int total = 0;
 
   @override
   void initState() {
     super.initState();
     _cityDataFuture =
         CityService().getCityDataById(widget.cityId.replaceAll(' ', ''));
+    id = int.parse(widget.cityId);
   }
 
   @override
   Widget build(BuildContext context) {
+    final UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    String email = userProvider.email;
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => NeighborhoodStatisticsPage(),
+            builder: (context) =>
+                NeighborhoodStatisticsPage(sentString: cityName),
           ),
         );
       },
@@ -92,6 +107,9 @@ class _SelectableCardState extends State<SelectableCard> {
           builder: (context, snapshot) {
             if (snapshot.hasData && snapshot.data != null) {
               final cityData = snapshot.data!;
+              users = cityData.numberOfUsers;
+              total = cityData.rating;
+              ratings = total.toDouble() / users;
               return Column(
                 children: [
                   Stack(
@@ -113,6 +131,16 @@ class _SelectableCardState extends State<SelectableCard> {
                             setState(() {
                               _isWishlist = !_isWishlist;
                             });
+                            if (!_isWishlist) {
+                              f1.removeFromWishlist(email, id);
+                            }
+                            //setState(() {});
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => WishlistPage(),
+                              ),
+                            );
                           },
                           icon: Icon(
                             _isWishlist
@@ -136,7 +164,7 @@ class _SelectableCardState extends State<SelectableCard> {
                         SizedBox(width: 5),
                         Icon(Icons.star, color: Colors.yellow),
                         SizedBox(width: 5),
-                        Text(cityData.rating.toStringAsFixed(1)),
+                        Text(ratings.toStringAsFixed(2)),
                       ],
                     ),
                     onTap: () {

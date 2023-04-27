@@ -7,13 +7,13 @@ import 'package:flutter/foundation.dart'
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
 /// Example:
-/// ```dart
+/// dart
 /// import 'firebase_options.dart';
 /// // ...
 /// await Firebase.initializeApp(
 ///   options: DefaultFirebaseOptions.currentPlatform,
 /// );
-/// ```
+///
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
@@ -70,7 +70,8 @@ class DefaultFirebaseOptions {
     projectId: 'whereshouldyoulive-1e51b',
     databaseURL: 'https://whereshouldyoulive-1e51b-default-rtdb.firebaseio.com',
     storageBucket: 'whereshouldyoulive-1e51b.appspot.com',
-    iosClientId: '625745952057-gfagi3a81cgdrqpquv8eei7if5ighv7o.apps.googleusercontent.com',
+    iosClientId:
+        '625745952057-gfagi3a81cgdrqpquv8eei7if5ighv7o.apps.googleusercontent.com',
     iosBundleId: 'com.example.whereShouldYouLive',
   );
 
@@ -81,7 +82,8 @@ class DefaultFirebaseOptions {
     projectId: 'whereshouldyoulive-1e51b',
     databaseURL: 'https://whereshouldyoulive-1e51b-default-rtdb.firebaseio.com',
     storageBucket: 'whereshouldyoulive-1e51b.appspot.com',
-    iosClientId: '625745952057-gfagi3a81cgdrqpquv8eei7if5ighv7o.apps.googleusercontent.com',
+    iosClientId:
+        '625745952057-gfagi3a81cgdrqpquv8eei7if5ighv7o.apps.googleusercontent.com',
     iosBundleId: 'com.example.whereShouldYouLive',
   );
 }

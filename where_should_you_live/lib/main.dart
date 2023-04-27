@@ -11,6 +11,8 @@ import './sign_up.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'navigationBar.dart';
+import 'userProvider.dart';
+import 'package:provider/provider.dart';
 // import './login.dart';
 import './preference_page.dart';
 import 'searchAndFilterView.dart';
@@ -23,23 +25,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(GetMaterialApp(
-    // Replace MaterialApp with GetMaterialApp
-    home: OnBoardingScreen(
-      onLoggedIn: () async {
-        await _setLoginStatus(true); 
-      },
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        // Add additional providers here
+      ],
+      child: MyApp(),
     ),
-    routes: {
-      '/signup': (context) => SignUpPage(),
-      // '/login': (context) => const Login(),
-      '/home': (context) => navigationBar(),
-      '/forgotPassword': (context) => ForgotPasswordScreen(),
-      '/preference': (context) => PreferencePage(),
-      '/profile': (context) => ProfilePage(),
-      // '/wishlist': (context) => WishlistPage(),
-    },
-  ));
+  );
 }
 
 Future<bool> _checkLoginStatus() async {
@@ -53,28 +47,13 @@ Future<void> _setLoginStatus(bool isLoggedIn) async {
   await prefs.setBool('isLoggedIn', isLoggedIn);
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  bool _isLoggedIn = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _checkLoginStatus().then((isLoggedIn) {
-      setState(() {
-        _isLoggedIn = isLoggedIn;
-      });
-    });
-  }
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'My App',
+    final userProvider = Provider.of<UserProvider>(context);
+
+    return GetMaterialApp(
+      // Replace MaterialApp with GetMaterialApp
       home: FutureBuilder<bool>(
         future: _checkLoginStatus(),
         builder: (BuildContext context, AsyncSnapshot<bool?> snapshot) {
@@ -85,92 +64,22 @@ class _MyAppState extends State<MyApp> {
           } else {
             return OnBoardingScreen(
               onLoggedIn: () async {
+                userProvider.email =
+                    'user@example.com'; // Set the user's email address
                 await _setLoginStatus(true);
               },
             );
           }
         },
       ),
+      routes: {
+        '/signup': (context) => SignUpPage(),
+        '/SignUpPage': (context) => SignUpPage(),
+        '/home': (context) => navigationBar(),
+        '/forgotPassword': (context) => ForgotPasswordScreen(),
+        '/preference': (context) => PreferencePage(),
+        '/profile': (context) => ProfilePage(),
+      },
     );
   }
 }
-
-
-
-
-
-
-// class MyPreference extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Preference Page',
-//       theme: ThemeData(
-//         primarySwatch: Colors.blue,
-//       ),
-//       home: PreferencePage(),
-//     );
-//   }
-// }
-
-// class MainApp extends StatelessWidget {
-//   const MainApp({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: Scaffold(
-//         body: Center(
-//           child: ElevatedButton(
-//             onPressed: () => {
-//               Navigator.push(
-//                 context,
-//                 MaterialPageRoute(builder: (context) => SignUpPage()),
-//               )
-//             },
-//             child: const Text('Sign Up'),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// class MyHomePage extends StatelessWidget {
-//   const MyHomePage({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Homepage'),
-//       ),
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: <Widget>[
-//             ElevatedButton(
-//               onPressed: () => {
-//                 Navigator.push(
-//                   context,
-//                   MaterialPageRoute(builder: (context) => SignUpPage()),
-//                 )
-//               },
-//               child: const Text('Sign Up'),
-//             ),
-//             const SizedBox(height: 16),
-//             ElevatedButton(
-//               onPressed: () => {
-//                 Navigator.push(
-//                   context,
-//                   MaterialPageRoute(builder: (context) => const Login()),
-//                 ),
-//               },
-//               child: const Text('Login'),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
