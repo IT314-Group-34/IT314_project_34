@@ -9,6 +9,8 @@ import 'package:http/http.dart' as http;
 import 'dart:ui';
 
 String cityName = 'mumbai';
+String email = 'aditya1234@gmail.com';
+int id=0;
 
 class RatingWidget extends StatefulWidget {
   final CityService cityService = CityService();
@@ -250,16 +252,32 @@ class FavoriteIcon extends StatefulWidget {
 
   @override
   _FavoriteIconState createState() => _FavoriteIconState();
+
+  void setState(Null Function() param0) {}
 }
 
 class _FavoriteIconState extends State<FavoriteIcon> {
   bool _isFavorite = false;
+  final CityService cityService = CityService();
+  final CityDatabase citydatabase = CityDatabase();
+  final FirebaseUserRepository f1 = FirebaseUserRepository();
+  CityData? cityData;
 
   @override
   void initState() {
     super.initState();
     _isFavorite = widget.isFavorite; // Set the initial state from the prop
+     _getCityData();
   }
+  
+
+  Future<void> _getCityData() async {
+    cityData = await cityService.getCityData(cityName);
+    id=cityData!.geonameId;
+    print("$id");
+    setState(() {});
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -272,6 +290,7 @@ class _FavoriteIconState extends State<FavoriteIcon> {
         setState(() {
           _isFavorite = !_isFavorite;
         });
+        _isFavorite ? f1.addToWishlist(email,id) : f1.removeFromWishlist(email, id);
       },
     );
   }
