@@ -16,50 +16,89 @@ import './preference_page.dart';
 import 'searchAndFilterView.dart';
 import './wishlist.dart';
 
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(GetMaterialApp(
     // Replace MaterialApp with GetMaterialApp
-    home: OnBoardingScreen(),
+    home: OnBoardingScreen(
+      onLoggedIn: () async {
+        await _setLoginStatus(true);
+      },
+    ),
     routes: {
       '/signup': (context) => SignUpPage(),
       // '/login': (context) => const Login(),
-      '/onboarding': (context) => const OnBoardingScreen(),
       '/home': (context) => navigationBar(),
       '/forgotPassword': (context) => ForgotPasswordScreen(),
       '/preference': (context) => PreferencePage(),
       '/profile': (context) => ProfilePage(),
-      '/wishlist': (context) => WishlistPage(),
+      // '/wishlist': (context) => WishlistPage(),
     },
   ));
 }
 
-class MyApp extends StatelessWidget {
+Future<bool> _checkLoginStatus() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+  return isLoggedIn;
+}
+
+Future<void> _setLoginStatus(bool isLoggedIn) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setBool('isLoggedIn', isLoggedIn);
+}
+
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _isLoggedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus().then((isLoggedIn) {
+      setState(() {
+        _isLoggedIn = isLoggedIn;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'My App',
       home: FutureBuilder<bool>(
-        future: isLoggedIn(),
-        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        future: _checkLoginStatus(),
+        builder: (BuildContext context, AsyncSnapshot<bool?> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator();
           } else if (snapshot.data == true) {
             return navigationBar();
           } else {
-            return OnBoardingScreen();
+            return OnBoardingScreen(
+              onLoggedIn: () async {
+                await _setLoginStatus(true);
+              },
+            );
           }
         },
       ),
     );
   }
-
-  Future<bool> isLoggedIn() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('isLoggedIn') ?? false;
-  }
 }
+
+
+
+
+
 
 // class MyPreference extends StatelessWidget {
 //   @override

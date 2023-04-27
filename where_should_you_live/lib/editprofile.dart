@@ -2,10 +2,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'constants.dart';
 import 'imagepicker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'models/user_model.dart';
+import 'neighborhood_details.dart';
 
 class EditProfilePage extends StatefulWidget {
-  const EditProfilePage({super.key});
-
+  Map<String, dynamic>? objUserData;
+  String? email_ID;
+  EditProfilePage({super.key, this.objUserData, required this.email_ID});
   @override
   State<EditProfilePage> createState() => _EditProfilePageState();
 }
@@ -13,6 +18,7 @@ class EditProfilePage extends StatefulWidget {
 class _EditProfilePageState extends State<EditProfilePage> {
   File? _image;
 
+  String? _email;
   TextEditingController nameController = TextEditingController();
   TextEditingController occupationController = TextEditingController();
   TextEditingController ageController = TextEditingController();
@@ -26,6 +32,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final FocusNode ethnicityFocusNode = FocusNode();
   final FocusNode religionFocusNode = FocusNode();
 
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
+
   Future getImage(BuildContext context) async {
     var img1 = await FilePicker.showImagePickerDialog(context, Platform.isIOS);
 
@@ -36,8 +44,62 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
+  Future<void> addUserToFireStore() async {
+    await FirebaseUserRepository().addUser(User(
+        firstName: nameController.text,
+        email: _email!,
+        lastName: widget.objUserData?["lastName"],
+        occupation: occupationController.text,
+        age: int.parse(ageController.text),
+        height: double.parse(heightController.text),
+        ethnicity: ethnicityController.text,
+        religion: religionController.text,
+        wishlist: widget.objUserData?["wishlist"] == null
+            ? ''
+            : widget.objUserData?["wishlist"]));
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('User data added successfully')),
+    );
+  }
+
+  Future<void> updateUserToFireStore() async {
+    await FirebaseUserRepository().updateUser(User(
+        firstName: nameController.text,
+        email: _email!,
+        lastName: widget.objUserData?["lastName"],
+        occupation: occupationController.text,
+        age: int.parse(ageController.text),
+        height: double.parse(heightController.text),
+        ethnicity: ethnicityController.text,
+        religion: religionController.text,
+        wishlist: widget.objUserData?["wishlist"] == null
+            ? ''
+            : widget.objUserData?["wishlist"]));
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('User data updated successfully')),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _email = widget.email_ID;
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (widget.objUserData != null) {
+      setState(() {
+        nameController.text = widget.objUserData!["name"];
+        occupationController.text = widget.objUserData!["occupation"];
+        ageController.text = widget.objUserData!["age"].toString();
+        heightController.text = widget.objUserData!["height"].toString();
+        ethnicityController.text = widget.objUserData!["ethnicity"];
+        religionController.text = widget.objUserData!["religion"];
+      });
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Constants.appPurpleColor,
@@ -45,7 +107,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           icon: const Icon(Icons.arrow_back_ios_new_sharp, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text("Edit Profile"),
+        title: Text(_email == null ? 'No email' : '$_email'),
         centerTitle: true,
       ),
       body: Padding(
@@ -143,11 +205,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     "profile": _image?.path,
                     "name": nameController.text,
                     "occupation": occupationController.text,
-                    "age": ageController.text,
-                    "height": heightController.text,
+                    "age": int.parse(ageController.text),
+                    "height": double.parse(heightController.text),
                     "ethnicity": ethnicityController.text,
                     "religion": religionController.text,
                   };
+
+                  if (_email == null) {
+                    addUserToFireStore();
+                  } else {
+                    updateUserToFireStore();
+                  }
+
                   Navigator.of(context).pop(usersData);
                 },
                 style: ElevatedButton.styleFrom(

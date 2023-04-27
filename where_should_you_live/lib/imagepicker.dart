@@ -36,10 +36,9 @@ class FilePicker {
               },
             ),
           );
-        }
+        },
       );
-    } 
-    else {
+    } else {
       imgResource = await showDialog<ImageSource>(
           context: _context,
           builder: (context) => AlertDialog(
@@ -57,6 +56,7 @@ class FilePicker {
                 ],
               ));
     }
+
     if (imgResource != null) {
       ImagePicker _imagePicker = ImagePicker();
       final file = await _imagePicker.getImage(source: imgResource);
