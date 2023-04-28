@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:where_should_you_live/wishlist.dart';
+import 'userProvider.dart';
+import 'package:provider/provider.dart';
+import 'profile.dart';
 
 class Homepage extends StatefulWidget {
   Homepage({Key? key}) : super(key: key);
@@ -13,7 +17,7 @@ class _HomepageState extends State<Homepage> {
       height: 200,
       width: 250,
       decoration: BoxDecoration(
-        color: Colors.lightBlue,
+        color: Color.fromRGBO(232, 221, 252, 1.0),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
@@ -40,7 +44,7 @@ class _HomepageState extends State<Homepage> {
           Expanded(
             child: MaterialButton(
               onPressed: () {},
-              textColor: Colors.white,
+              textColor: Colors.black,
               child: Text(value),
             ),
           ),
@@ -64,22 +68,24 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
+    final UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
     return MaterialApp(
         home: Scaffold(
       drawer: Drawer(
         child: Container(
-          color: Colors.lightBlueAccent,
+          color: Color.fromRGBO(232, 221, 252, 1.0),
           child: ListView(
             children: [
               DrawerHeader(
                 child: Row(
                   children: [
                     CircleAvatar(
-                      backgroundColor: Colors.white,
+                      backgroundColor: Colors.black,
                       radius: 50,
                       child: CircleAvatar(
                         radius: 46,
-                        backgroundColor: Colors.lightBlue,
+                        backgroundColor: Color.fromRGBO(232, 221, 252, 1.0),
                         child: Icon(
                           Icons.person,
                           size: 50,
@@ -91,32 +97,36 @@ class _HomepageState extends State<Homepage> {
                       child: Padding(
                         padding: EdgeInsets.only(left: 15),
                         child: Text(
-                          "User Full Name",
-                          style: TextStyle(color: Colors.white),
+                          userProvider.email,
+                          style: TextStyle(color: Colors.black),
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  // Navigate to profile page
-                  Navigator.pushNamed(context, '/profile');
-                },
-                child: ListTile(
-                  leading: Icon(Icons.person),
-                  title: Text('View Profile'),
+              Container(
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => ProfilePage()));
+                  },
+                  child: ListTile(
+                    leading: Icon(Icons.person),
+                    title: Text('Profile'),
+                  ),
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  // Navigate to wishlist page
-                  Navigator.pushNamed(context, '/wishlist');
-                },
-                child: ListTile(
-                  leading: Icon(Icons.favorite),
-                  title: Text('Wishlist'),
+              Container(
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => WishlistPage()));
+                  },
+                  child: ListTile(
+                    leading: Icon(Icons.person),
+                    title: Text('Wishlist'),
+                  ),
                 ),
               ),
             ],
@@ -124,14 +134,14 @@ class _HomepageState extends State<Homepage> {
         ),
       ),
       appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
           'Welcome To HomePage !',
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: Color.fromRGBO(29, 9, 93, 1.0),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),

@@ -32,7 +32,7 @@ class _MyAppState extends State<navigationBar> {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
-    print(userProvider.email);
+    // print(userProvider.email);
     return MaterialApp(
       home: Scaffold(
         body: Center(
