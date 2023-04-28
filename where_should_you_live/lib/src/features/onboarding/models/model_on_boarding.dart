@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:flutter/src/material/material_button.dart';
+
 class OnBoardingModel {
   final String image;
   final String title;

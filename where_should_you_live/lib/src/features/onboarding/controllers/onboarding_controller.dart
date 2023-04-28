@@ -1,11 +1,13 @@
 import 'package:get/get.dart';
 import 'package:liquid_swipe/liquid_swipe.dart';
 import 'package:where_should_you_live/sign_up.dart';
-import 'package:where_should_you_live/src/common_widgets/onboarding_widget.dart';
-import 'package:where_should_you_live/src/features/authentication/models/model_on_boarding.dart';
+import 'package:where_should_you_live/src/features/onboarding/common_widgets/onboarding_widget.dart';
+import 'package:where_should_you_live/src/features/onboarding/models/model_on_boarding.dart';
 import 'package:where_should_you_live/src/constants/text_strings.dart';
 import 'package:where_should_you_live/src/constants/colors.dart';
 import 'package:where_should_you_live/src/constants/image_strings.dart';
+import 'package:flutter/material.dart';
+import 'package:where_should_you_live/src/constants/sizes.dart';
 
 class OnBoardingController extends GetxController {
   final controller = LiquidController();
@@ -30,15 +32,25 @@ class OnBoardingController extends GetxController {
         bgColor: tonBoardingPage2Color,
       ),
     ),
+    
     OnBoardingPageWidget(
-      model: OnBoardingModel(
-        image: tOnboardingImage3,
-        title: tOnboardingTitle3,
-        subTitle: tOnboardingSubTitle3,
-        counterText: tOnboardingCounterText3,
-        bgColor: tOnBoardingPage3Color,
-      ),
+  model: OnBoardingModel(
+    image: tOnboardingImage3,
+    title: tOnboardingTitle3,
+    subTitle: tOnboardingSubTitle3,
+    counterText: tOnboardingCounterText3,
+    bgColor: tOnBoardingPage3Color,
+  ),
+  button: MaterialButton(
+    color: tOnBoardingPage3Color,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(28),
     ),
+    child: Text("Continue", style: TextStyle(color: Colors.white)),
+    onPressed: () => Get.to(() => SignUpPage()),
+  ),
+),
+
   ];
 
   skip() => controller.jumpToPage(page: 2);
@@ -51,7 +63,7 @@ class OnBoardingController extends GetxController {
     currentPage.value = activePageIndex;
     if (activePageIndex == 2) {
       // Navigate to the signup page
-      Get.to(() => SignUpPage());
+      // Get.to(() => SignUpPage());
     }
   }
 }

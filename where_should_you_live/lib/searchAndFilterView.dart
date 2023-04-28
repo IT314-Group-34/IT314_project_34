@@ -1,62 +1,31 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:where_should_you_live/models/neibhorhood_model.dart'
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      home: SearchPage(),
-    );
-  }
-}
+import 'models/neibhorhood_model.dart';
+import 'neighborhood_details.dart';
 
 enum ExerciseFilter {
   Housing,
   Cost_of_Living,
-  Startups,
   Venture_Capital,
   Travel_Connectivity,
-  Commute,
   Business_Freedom,
   Safety,
   Healthcare,
   Education,
   Environmental_Quality,
-  Economy,
-  Taxation,
   Internet_Access,
-  Leisure_and_Culture,
-  Tolerance,
-  Outdoors
 }
-
-//-----------------------------------------
 
 class SearchPage extends StatefulWidget {
   @override
   _SearchPageState createState() => _SearchPageState();
 }
 
-//---------------------------------------
-
 class _SearchPageState extends State<SearchPage> {
   static const historyLength = 5;
 
-  // The "raw" history that we don't access from the UI, prefilled with values
   List<String> _searchHistory = [];
-
-  // The filtered & ordered history that's accessed from the UI
   late List<String> filteredSearchHistory;
   final List<String> _filters = <String>[];
 
@@ -64,7 +33,6 @@ class _SearchPageState extends State<SearchPage> {
     required String? filter,
   }) {
     if (filter != null && filter.isNotEmpty) {
-      // Reversed because we want the last added items to appear first in the UI
       return _searchHistory.reversed
           .where((term) => term.startsWith(filter))
           .toList();
@@ -75,7 +43,6 @@ class _SearchPageState extends State<SearchPage> {
 
   void addSearchTerm(String term) {
     if (_searchHistory.contains(term)) {
-      // This method will be implemented soon
       putSearchTermFirst(term);
       return;
     }
@@ -83,7 +50,6 @@ class _SearchPageState extends State<SearchPage> {
     if (_searchHistory.length > historyLength) {
       _searchHistory.removeRange(0, _searchHistory.length - historyLength);
     }
-    // Changes in _searchHistory mean that we have to update the filteredSearchHistory
     filteredSearchHistory = filterSearchTerms(filter: null);
   }
 
@@ -97,15 +63,23 @@ class _SearchPageState extends State<SearchPage> {
     addSearchTerm(term);
   }
 
-  // The currently searched-for term
   String? selectedTerm;
   late FloatingSearchBarController controller;
+  late SearchResultsListView _searchResultsListView;
 
   @override
   void initState() {
     super.initState();
     controller = FloatingSearchBarController();
     filteredSearchHistory = filterSearchTerms(filter: null);
+    _searchResultsListView = SearchResultsListView(searchTerm: selectedTerm);
+  }
+
+  void updateSelectedTerm(String term) {
+    setState(() {
+      selectedTerm = term;
+      _searchResultsListView = SearchResultsListView(searchTerm: term);
+    });
   }
 
   @override
@@ -121,17 +95,25 @@ class _SearchPageState extends State<SearchPage> {
         controller: controller,
         body: FloatingSearchBarScrollNotifier(
           child: SearchResultsListView(
+            key: UniqueKey(),
             searchTerm: selectedTerm,
           ),
         ),
         transition: CircularFloatingSearchBarTransition(),
         physics: BouncingScrollPhysics(),
-        title: Text(selectedTerm ?? 'Search',
-            style: Theme.of(context).textTheme.headline6),
+        title: Text(
+          selectedTerm ?? 'Search',
+          style: Theme.of(context).textTheme.headline6,
+        ),
         hint: 'What are you looking for...',
-        actions: [FloatingSearchBarAction.searchToClear()],
-        onQueryChanged: (query) => setState(
-            () => filteredSearchHistory = filterSearchTerms(filter: query)),
+        actions: [
+          FloatingSearchBarAction.searchToClear(),
+        ],
+        onQueryChanged: (query) {
+          setState(() {
+            filteredSearchHistory = filterSearchTerms(filter: query);
+          });
+        },
         onSubmitted: (query) {
           setState(() {
             addSearchTerm(query);
@@ -140,50 +122,279 @@ class _SearchPageState extends State<SearchPage> {
           controller.close();
         },
         builder: (context, transition) {
-          if (filteredSearchHistory.isEmpty && controller.query.isEmpty) {
-            return Container(
-              height: 56,
-              width: double.infinity,
-              alignment: Alignment.center,
-              child: Text('Start searching',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.bodySmall),
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Material(
+              color: Color.fromARGB(255, 236, 228, 228),
+              elevation: 4,
+              child: Builder(
+                builder: (context) {
+                  if (filteredSearchHistory.isEmpty &&
+                      controller.query.isEmpty) {
+                    return Container(
+                      height: 56,
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Start searching',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.caption,
+                      ),
+                    );
+                  } else if (filteredSearchHistory.isEmpty) {
+                    return ListTile(
+                      title: Text(controller.query),
+                      leading: const Icon(Icons.search),
+                      onTap: () {
+                        setState(() {
+                          addSearchTerm(controller.query);
+                          selectedTerm = controller.query;
+                        });
+                        controller.close();
+                      },
+                    );
+                  } else {
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: filteredSearchHistory
+                          .map(
+                            (term) => ListTile(
+                              title: Text(
+                                term,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              leading: const Icon(Icons.history),
+                              trailing: IconButton(
+                                icon: const Icon(Icons.clear),
+                                onPressed: () {
+                                  setState(() {
+                                    deleteSearchTerm(term);
+                                  });
+                                },
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  putSearchTermFirst(term);
+                                  selectedTerm = term;
+                                });
+                                controller.close();
+                              },
+                            ),
+                          )
+                          .toList(),
+                    );
+                  }
+                },
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class SearchResultsListView extends StatefulWidget {
+  final String? searchTerm;
+
+  const SearchResultsListView({
+    Key? key,
+    this.searchTerm,
+  }) : super(key: key);
+
+  @override
+  _SearchResultsListViewState createState() => _SearchResultsListViewState();
+}
+
+class _SearchResultsListViewState extends State<SearchResultsListView> {
+  late Future<CityData?> _futureCityData;
+  late List<ExerciseFilter> items;
+  late List<ExerciseFilter> filteredItems;
+  final List<Color> cardColors = [
+    Colors.green[100]!,
+    Colors.red[100]!,
+    Colors.blue[100]!,
+    Colors.orange[100]!,
+    Colors.purple[100]!,
+    Colors.teal[100]!,
+  ];
+  String? _searchTerm;
+  bool _isSelected = false;
+  bool _isWishlist = false;
+  @override
+  void initState() {
+    super.initState();
+    _searchTerm = widget.searchTerm;
+    _futureCityData = Future.value(null);
+    if (_searchTerm != null) {
+      _futureCityData = CityService().getCityData(_searchTerm!.toString());
+    }
+    items = ExerciseFilter.values;
+    filteredItems = items;
+  }
+
+  @override
+  void didUpdateWidget(SearchResultsListView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.searchTerm != oldWidget.searchTerm) {
+      setState(() {
+        _searchTerm = widget.searchTerm;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final cardWidth = screenWidth / 2 - 16; // subtracting padding
+    final cardHeight = cardWidth / 1.5;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 100.0),
+      child: FutureBuilder<CityData?>(
+        future: _futureCityData,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
             );
-          } else if (filteredSearchHistory.isEmpty) {
-            return ListTile(
-              title: Text(controller.query),
-              leading: const Icon(Icons.search),
+          } else if (snapshot.hasData) {
+            final cityData = snapshot.data!;
+            return GestureDetector(
               onTap: () {
-                setState(() {
-                  addSearchTerm(controller.query);
-                  selectedTerm = controller.query;
-                });
-                controller.close();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        NeighborhoodStatisticsPage(sentString: cityName),
+                  ),
+                );
               },
+              child: LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  return Container(
+                    height: constraints.maxHeight,
+                    child: Card(
+                      color: _isSelected
+                          ? Color.fromARGB(255, 231, 175, 106)
+                          : Color.fromARGB(255, 231, 175, 106),
+                      child: Column(
+                        children: [
+                          Stack(
+                            children: [
+                              Container(
+                                height: 200,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image:
+                                        NetworkImage(cityData.mobileImageLink),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                top: 10,
+                                right: 10,
+                                child: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _isWishlist = !_isWishlist;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    _isWishlist
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    color:
+                                        _isWishlist ? Colors.red : Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          ListTile(
+                            title: Row(
+                              children: [
+                                SizedBox(
+                                  width: 200, // set the desired width here
+                                  height: 50, // set the desired height here
+                                  child: Text(
+                                    cityData.fullName,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 5),
+                                Icon(Icons.star, color: Colors.yellow),
+                                SizedBox(width: 5),
+                                Text(cityData.rating.toStringAsFixed(1)),
+                              ],
+                            ),
+                            onTap: () {
+                              setState(() {
+                                _isSelected = !_isSelected;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
             );
           } else {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: filteredSearchHistory
-                  .map((term) => ListTile(
-                        title: Text(term,
-                            maxLines: 1, overflow: TextOverflow.ellipsis),
-                        leading: const Icon(Icons.history),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.clear),
-                          onPressed: () =>
-                              setState(() => deleteSearchTerm(term)),
+            return GridView.count(
+              crossAxisCount: 2,
+              childAspectRatio: cardWidth / cardHeight,
+              padding: const EdgeInsets.all(8.0), // add padding between cards
+              mainAxisSpacing: 8.0, // add spacing between rows
+              crossAxisSpacing: 8.0, // add spacing between columns
+              children: List.generate(filteredItems.length, (index) {
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FilterDetailsPage(
+                          filterName:
+                              filteredItems[index].toString().split('.').last,
                         ),
-                        onTap: () {
-                          setState(() {
-                            putSearchTermFirst(term);
-                            selectedTerm = term;
-                          });
-                          controller.close();
-                        },
-                      ))
-                  .toList(),
+                      ),
+                    );
+                  },
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: Card(
+                          color: cardColors[index % cardColors.length],
+                          margin: EdgeInsets.zero,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Center(
+                            child: Text(
+                              filteredItems[index]
+                                  .toString()
+                                  .split('.')
+                                  .last
+                                  .replaceAll('_', ' '),
+                              style: const TextStyle(
+                                fontSize: 16, // decrease font size
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
             );
           }
         },
@@ -192,250 +403,233 @@ class _SearchPageState extends State<SearchPage> {
   }
 }
 
-//-----------------------------------------
-class SearchResultsListView extends StatefulWidget {
-  final String? searchTerm;
+class FilterDetailsPage extends StatefulWidget {
+  final String filterName;
 
-  const SearchResultsListView({
+  const FilterDetailsPage({
     Key? key,
-    required this.searchTerm,
+    required this.filterName,
   }) : super(key: key);
 
   @override
-  State<SearchResultsListView> createState() => _SearchResultsListViewState();
+  _FilterDetailsPageState createState() => _FilterDetailsPageState();
 }
 
-//-----------------------------------------
+class _FilterDetailsPageState extends State<FilterDetailsPage> {
+  late Future<List<Map<String, dynamic>>> _futureCityData;
 
+  @override
+  void initState() {
+    super.initState();
+    _futureCityData = _fetchCityData();
+  }
 
-class _SearchResultsListViewState extends State<SearchResultsListView> {
-  final List<String> _filters = <String>[];
-  List<Map<int, dynamic>> _neighborDataList = [];
-  bool _loading = false;
+  late int index;
+  Future<List<Map<String, dynamic>>> _fetchCityData() async {
+    // Fetch the city data from the Firestore database
+    final snapshot = await FirebaseFirestore.instance.collection("City").get();
+
+    // Parse the city data into a list of Map<String, dynamic> objects
+    final cityData = snapshot.docs.map((doc) => doc.data()).toList();
+
+    if (widget.filterName == "Housing") {
+      // Sort the city data in descending order of score_out_of_10 in the categories array
+      cityData.sort((a, b) => b["categories"][0]["score_out_of_10"]
+          .compareTo(a["categories"][0]["score_out_of_10"]));
+      index = 0;
+    } else if (widget.filterName == "Cost_of_Living") {
+      // Sort the city data in descending order of score_out_of_10 in the categories array
+      cityData.sort((a, b) => b["categories"][1]["score_out_of_10"]
+          .compareTo(a["categories"][1]["score_out_of_10"]));
+      index = 1;
+    } else if (widget.filterName == "Venture_Capital") {
+      // Sort the city data in descending order of score_out_of_10 in the categories array
+      cityData.sort((a, b) => b["categories"][3]["score_out_of_10"]
+          .compareTo(a["categories"][3]["score_out_of_10"]));
+      index = 3;
+    } else if (widget.filterName == "Travel_Connectivity") {
+      // Sort the city data in descending order of score_out_of_10 in the categories array
+      cityData.sort((a, b) => b["categories"][4]["score_out_of_10"]
+          .compareTo(a["categories"][4]["score_out_of_10"]));
+      index = 4;
+    } else if (widget.filterName == "Business_Freedom") {
+      // Sort the city data in descending order of score_out_of_10 in the categories array
+      cityData.sort((a, b) => b["categories"][6]["score_out_of_10"]
+          .compareTo(a["categories"][6]["score_out_of_10"]));
+      index = 6;
+    } else if (widget.filterName == "Safety") {
+      // Sort the city data in descending order of score_out_of_10 in the categories array
+      cityData.sort((a, b) => b["categories"][7]["score_out_of_10"]
+          .compareTo(a["categories"][7]["score_out_of_10"]));
+      index = 7;
+    } else if (widget.filterName == "Healthcare") {
+      // Sort the city data in descending order of score_out_of_10 in the categories array
+      cityData.sort((a, b) => b["categories"][8]["score_out_of_10"]
+          .compareTo(a["categories"][8]["score_out_of_10"]));
+      index = 8;
+    } else if (widget.filterName == "Education") {
+      // Sort the city data in descending order of score_out_of_10 in the categories array
+      cityData.sort((a, b) => b["categories"][9]["score_out_of_10"]
+          .compareTo(a["categories"][9]["score_out_of_10"]));
+      index = 9;
+    } else if (widget.filterName == "Environmental_Quality") {
+      // Sort the city data in descending order of score_out_of_10 in the categories array
+      cityData.sort((a, b) => b["categories"][10]["score_out_of_10"]
+          .compareTo(a["categories"][10]["score_out_of_10"]));
+      index = 10;
+    } else if (widget.filterName == "Internet_Access") {
+      // Sort the city data in descending order of score_out_of_10 in the categories array
+      cityData.sort((a, b) => b["categories"][13]["score_out_of_10"]
+          .compareTo(a["categories"][13]["score_out_of_10"]));
+      index = 13;
+    }
+
+    return cityData;
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.searchTerm == null) {
-      // Render the search filters and prompt.
-      return SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 100,
-            ),
-            SizedBox(
-              height: 100,
-              child: Wrap(
-                spacing: 5.0,
-                children: ExerciseFilter.values.map((ExerciseFilter exercise) {
-                  return FilterChip(
-                    label: Text(exercise.name),
-                    selected: _filters.contains(exercise.name),
-                    onSelected: (bool value) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.filterName),
+      ),
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        future: _futureCityData,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasData) {
+            final cityData = snapshot.data!;
+            return ListView.builder(
+              itemCount: cityData.length,
+              itemBuilder: (context, index) {
+                return SelectableCard2(
+                  cityId: cityData[index]['city_id'].toString(),
+                  // Add any additional fields from the wishlist item here
+                );
+              },
+            );
+          } else {
+            return const Center(
+              child: Text("Failed to fetch city data"),
+            );
+          }
+        },
+      ),
+    );
+  }
+}
+
+class SelectableCard2 extends StatefulWidget {
+  final String cityId;
+  const SelectableCard2({Key? key, required this.cityId}) : super(key: key);
+
+  @override
+  _SelectableCardState createState() => _SelectableCardState();
+}
+
+class _SelectableCardState extends State<SelectableCard2> {
+  late Future<CityData?> _cityDataFuture;
+  bool _isSelected = false;
+  bool _isWishlist = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _cityDataFuture =
+        CityService().getCityDataById(widget.cityId.replaceAll(' ', ''));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                NeighborhoodStatisticsPage(sentString: cityName),
+          ),
+        );
+      },
+      child: Card(
+        color: _isSelected
+            ? Color.fromARGB(255, 231, 175, 106)
+            : Color.fromARGB(255, 231, 175, 106),
+        child: FutureBuilder<CityData?>(
+          future: _cityDataFuture,
+          builder: (context, snapshot) {
+            if (snapshot.hasData && snapshot.data != null) {
+              final cityData = snapshot.data!;
+              return Column(
+                children: [
+                  Stack(
+                    children: [
+                      Container(
+                        height: 200,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: NetworkImage(cityData.mobileImageLink),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        top: 10,
+                        right: 10,
+                        child: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _isWishlist = !_isWishlist;
+                            });
+                          },
+                          icon: Icon(
+                            _isWishlist
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color: _isWishlist ? Colors.red : Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  ListTile(
+                    title: Row(
+                      children: [
+                        Text(
+                          cityData.fullName,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: 5),
+                        Icon(Icons.star, color: Colors.yellow),
+                        SizedBox(width: 5),
+                        Text(cityData.rating.toStringAsFixed(1)),
+                      ],
+                    ),
+                    onTap: () {
                       setState(() {
-                        if (value) {
-                          if (!_filters.contains(exercise.name)) {
-                            _filters.add(exercise.name);
-                          }
-                        } else {
-                          _filters.removeWhere((String name) {
-                            return name == exercise.name;
-                          });
-                        }
+                        _isSelected = !_isSelected;
                       });
                     },
-                  );
-                }).toList(),
-              ),
-            ),
-            SizedBox(
-              height: 400,
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.search,
-                      size: 64,
-                    ),
-                    Text(
-                      'Start searching',
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+                  ),
+                ],
+              );
+            } else if (snapshot.connectionState == ConnectionState.done) {
+              return ListTile(
+                title: Text('City not found.'),
+              );
+            } else {
+              return ListTile(
+                title: Text('Loading city...'),
+              );
+            }
+          },
         ),
-      );
-    } else {
-      // Perform the search and update the list of neighborDataList.
-      if (!_loading) {
-        setState(() {
-          _loading = true;
-        });
-        SearchService()
-            .searchNeighborhoods(widget.searchTerm!, _filters)
-            .then((List<Map<int, dynamic>> neighborData) {
-          setState(() {
-            _neighborDataList = neighborData;
-            _loading = false;
-          });
-          print("Neighbor data: $_neighborDataList");
-        }).catchError((error) {
-          setState(() {
-            _neighborDataList = [];
-            _loading = false;
-          });
-        });
-      }
-    }
-
-    // Render the list of search results.
-    if (_loading) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    } else if (_neighborDataList.isEmpty) {
-      return Center(
-        child: Text('No results found.'),
-      );
-    } else {
-      print("Building search results list");
-      return ListView(
-        padding: EdgeInsets.all(16),
-        children: _neighborDataList
-            .map((neighborData) => buildImageInteractionCard1(
-                  neighborData['documentId'], 
-                  neighborData['fullName'], 
-                  neighborData['mobileImageLink'])
-            )
-            .toList(),
-      );
-    }
+      ),
+    );
   }
 }
-
-
-
-
-class SearchService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  Future<List<Map<int, dynamic>>> searchNeighborhoods(
-      String searchQuery, List<String> filters) async {
-    Query query = _firestore.collection('City');
-
-    // Apply search query using where() method
-    if (searchQuery != null && searchQuery.isNotEmpty) {
-      query = query
-          .where('fullName', isGreaterThanOrEqualTo: searchQuery)
-          .where('fullName', isLessThan: searchQuery + 'z');
-    }
-
-    // Apply filters using orderBy() method
-    if (filters != null && filters.isNotEmpty) {
-      for (String filter in filters) {
-        query = query.orderBy('categories.$filter.score_out_of_10', descending: true);
-      }
-    }
-
-    try {
-      QuerySnapshot querySnapshot = await query.get();
-      List<Map<int, dynamic>> neighborhoods = [];
-      for (DocumentSnapshot doc in querySnapshot.docs) {
-        Map<int, dynamic> neighborhood = {
-          int.tryParse(doc.id) ?? 0: {
-            'fullName': (doc.data() as Map<String, dynamic>)['fullName'] as String,
-            'mobileImageLink': (doc.data() as Map<String, dynamic>)['mobile_image_link'] as String,
-          }
-        };
-        neighborhoods.add(neighborhood);
-      }
-      return neighborhoods;
-    } catch (error) {
-      print('Error in searchNeighborhoods: $error');
-      return [];
-    }
-  }
-}
-
-
-
-
-Widget buildImageInteractionCard1(int documentId, String fullName, String mobileImageLink) {
-  return Card(
-    clipBehavior: Clip.antiAlias,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(24),
-    ),
-    child: Column(
-      children: [
-        Stack(
-          children: [
-            Ink.image(
-              image: NetworkImage(mobileImageLink),
-              child: InkWell(
-                onTap: () {},
-              ),
-              height: 240,
-              fit: BoxFit.cover,
-            ),
-            Positioned(
-              bottom: 16,
-              right: 16,
-              left: 16,
-              child: Text(
-                fullName,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-          ],
-        ),
-        Padding(
-          padding: EdgeInsets.all(16).copyWith(bottom: 0),
-          child: Text(
-            documentId as String,
-            style: TextStyle(fontSize: 16),
-          ),
-        ),
-        ButtonBar(
-          alignment: MainAxisAlignment.start,
-          children: [
-            MaterialButton(
-              child: Text('More Details'),
-              onPressed: () {},
-            ),
-          ],
-        )
-      ],
-    ),
-  );
-}
-
-
-
-
-
-//---------------------------------------------
-
-
-// class SearchAndFilterView extends StatefulWidget {
-//   // ...
-// }
-
-// class _SearchAndFilterViewState extends State<SearchAndFilterView> {
-//   TextEditingController _searchController = TextEditingController();
-//   // Filter state variables
-
-
-//   @override
-//   Widget build(BuildContext context) {
-//     // Build search bar and filter buttons
-//   }
-// }

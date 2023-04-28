@@ -32,35 +32,31 @@ import 'package:google_sign_in/google_sign_in.dart';
 // }
 
 Future<UserCredential> signInWithGoogle(BuildContext context) async {
-  // Create a new provider
-  GoogleAuthProvider googleProvider = GoogleAuthProvider();
+  // Trigger the Google Authentication flow
+  final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-  googleProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-  googleProvider.setCustomParameters({'login_hint': 'user@example.com'});
+  // Obtain the auth details from the request
+  final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
+
+  // Create a new credential
+  final OAuthCredential credential = GoogleAuthProvider.credential(
+    accessToken: googleAuth.accessToken,
+    idToken: googleAuth.idToken,
+  );
 
   // Once signed in, return the UserCredential
   UserCredential userCredential =
-      await FirebaseAuth.instance.signInWithPopup(googleProvider);
+      await FirebaseAuth.instance.signInWithCredential(credential);
   User? user = userCredential.user;
   if (user != null) {
     // Navigate to home page
     Navigator.pushReplacementNamed(context, '/home');
   }
   return userCredential;
-  // Or use signInWithRedirect
-  // return await FirebaseAuth.instance.signInWithRedirect(googleProvider);
 }
 
-// Future<UserCredential> signInWithGitHub() async {
-//   // Create a new provider
-//   GithubAuthProvider githubProvider = GithubAuthProvider();
 
-//   // Once signed in, return the UserCredential
-//   return await FirebaseAuth.instance.signInWithPopup(githubProvider);
 
-//   // Or use signInWithRedirect
-//   // return await FirebaseAuth.instance.signInWithRedirect(githubProvider);
-// }
 
 Future<String?> signUpWithEmailAndPassword(
     BuildContext context, String email, String password) async {

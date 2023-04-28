@@ -4,7 +4,7 @@ import 'package:where_should_you_live/firebase_options.dart';
 import 'package:where_should_you_live/homepage.dart';
 import 'package:where_should_you_live/navigationBar.dart';
 import 'package:where_should_you_live/profile.dart';
-import 'package:where_should_you_live/src/features/authentication/screens/onboarding/onboarding_screen.dart';
+import 'package:where_should_you_live/src/features/onboarding/screens/onboarding/onboarding_screen.dart';
 import 'package:where_should_you_live/wishlist.dart';
 import 'forgotPassword.dart';
 import './sign_up.dart';
