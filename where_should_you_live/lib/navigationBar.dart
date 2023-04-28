@@ -8,6 +8,7 @@ import 'profile.dart';
 import 'firebase_options.dart';
 import 'userProvider.dart';
 import 'package:provider/provider.dart';
+import 'add_neighborhood_view.dart';
 
 class navigationBar extends StatefulWidget {
   @override
@@ -22,6 +23,7 @@ class _MyAppState extends State<navigationBar> {
     SearchPage(),
     ProfilePage(),
     WishlistPage(),
+    addNeighbourhood(),
   ];
   void _onItemTapped(int index) {
     setState(() {
@@ -56,9 +58,17 @@ class _MyAppState extends State<navigationBar> {
               icon: Icon(Icons.favorite),
               label: 'Wishlist',
             ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.location_city),
+              label: 'Add Neighbourhood',
+            ),
           ],
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
+          selectedItemColor:
+              Color.fromRGBO(29, 9, 93, 1.0), // set selected item color
+          unselectedItemColor:
+              Color.fromRGBO(232, 221, 252, 1.0), // set unselected item color
           selectedFontSize: 16.0, // set selected item font size
           unselectedFontSize: 14.0, // set unselected item font size
           type: BottomNavigationBarType

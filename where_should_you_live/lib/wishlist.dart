@@ -31,6 +31,7 @@ class _WishlistPageState extends State<WishlistPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Wishlist'),
+        backgroundColor: Color.fromRGBO(29, 9, 93, 1.0),
       ),
       body: FutureBuilder<List<String>>(
         future: _wishlistFuture,
