@@ -27,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Where Should You Live'),
+        backgroundColor: Color.fromRGBO(29, 9, 93, 1.0),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -118,7 +119,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: const Text(
                     'Forgot Password',
                     style: TextStyle(
-                      color: Colors.blue,
+                      color: Color.fromRGBO(29, 9, 93, 1.0),
                       fontSize: 20,
                     ),
                   ),
@@ -134,6 +135,10 @@ class _LoginPageState extends State<LoginPage> {
                             passwordController.text);
                       }
                     },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          Color.fromRGBO(29, 9, 93, 1.0)),
+                    ),
                     child: Text('Log in'),
                   ),
                 ),
@@ -157,7 +162,9 @@ class _LoginPageState extends State<LoginPage> {
                     TextButton(
                       child: const Text(
                         'Sign Up',
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Color.fromRGBO(29, 9, 93, 1.0)),
                       ),
                       onPressed: () {
                         Navigator.push(

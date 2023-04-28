@@ -20,7 +20,8 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Where You Should Live.'),
+        title: Text('Where Should You Live.'),
+        backgroundColor: Color.fromRGBO(29, 9, 93, 1.0),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -163,7 +164,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               'Log in',
                               style: TextStyle(
                                 fontSize: 20.0,
-                                color: Colors.blue,
+                                color: Colors.black,
                               ),
                             ),
                           ),
@@ -182,6 +183,10 @@ class _SignUpPageState extends State<SignUpPage> {
                               // TODO: Implement sign-up logic
                             }
                           },
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Color.fromRGBO(29, 9, 93, 1.0)),
+                          ),
                           child: Text('Register'),
                         ),
                       ),
