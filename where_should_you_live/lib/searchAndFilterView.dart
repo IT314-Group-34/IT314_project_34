@@ -498,6 +498,7 @@ class _FilterDetailsPageState extends State<FilterDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromRGBO(29, 9, 93, 1.0),
         title: Text(widget.filterName),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
