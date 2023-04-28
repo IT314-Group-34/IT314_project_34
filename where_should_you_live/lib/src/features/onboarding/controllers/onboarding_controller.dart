@@ -42,11 +42,11 @@ class OnBoardingController extends GetxController {
     bgColor: tOnBoardingPage3Color,
   ),
   button: MaterialButton(
-    color: tOnBoardingPage3Color,
+    color: Color.fromRGBO(29, 9, 93, 1.0),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(28),
     ),
-    child: Text("Continue", style: TextStyle(color: Colors.white)),
+    child: Text("Continue", style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
     onPressed: () => Get.to(() => SignUpPage()),
   ),
 ),

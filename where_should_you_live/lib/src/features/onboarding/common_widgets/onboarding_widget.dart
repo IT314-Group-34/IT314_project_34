@@ -45,18 +45,20 @@ class OnBoardingPageWidget extends StatelessWidget {
             style: Theme.of(context).textTheme.titleLarge,
           ),
           if (button != null) SizedBox(
-            width: double.infinity,
-            height: 60,
-            child: ElevatedButton(
-              onPressed: () {},
-              child: button!,
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-              ),
-            ),
-          ),
+  width: double.infinity,
+  height: 60,
+  child: ElevatedButton(
+    onPressed: () {},
+    child: button!,
+    style: ElevatedButton.styleFrom(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30),
+      ),
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+    ),
+  ),
+),
         ],
       ),
     );
