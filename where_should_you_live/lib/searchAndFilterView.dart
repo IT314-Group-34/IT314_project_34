@@ -468,7 +468,7 @@ class _SelectableCardState extends State<SelectableCard2> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => NeighborhoodStatisticsPage(),
+            builder: (context) => NeighborhoodStatisticsPage(sentString: '',),
           ),
         );
       },
