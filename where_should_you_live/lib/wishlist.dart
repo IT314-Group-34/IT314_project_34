@@ -30,8 +30,8 @@ class _WishlistPageState extends State<WishlistPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Wishlist'),
         backgroundColor: Color.fromRGBO(29, 9, 93, 1.0),
+        title: Text('Wishlist'),
       ),
       body: FutureBuilder<List<String>>(
         future: _wishlistFuture,
@@ -90,14 +90,17 @@ class _SelectableCardState extends State<SelectableCard> {
         Provider.of<UserProvider>(context, listen: false);
     String email = userProvider.email;
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) =>
-                NeighborhoodStatisticsPage(sentString: cityName),
-          ),
-        );
+      onTap: () async {
+        final cityData = await _cityDataFuture;
+        if (cityData != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NeighborhoodStatisticsPage(
+                  key: UniqueKey(), sentString: cityData.fullName),
+            ),
+          );
+        }
       },
       child: Card(
         color: _isSelected

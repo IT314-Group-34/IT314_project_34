@@ -63,6 +63,7 @@ class _RatingWidgetState extends State<RatingWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromRGBO(29, 9, 93, 1.0),
         title: Text('City Rating'),
         actions: [
           Padding(
@@ -332,8 +333,8 @@ int city_id = 0;
 class NeighborhoodStatisticsPage extends StatefulWidget {
   final String sentString;
 
-  NeighborhoodStatisticsPage({required this.sentString});
-
+  const NeighborhoodStatisticsPage({Key? key, required this.sentString})
+      : super(key: key);
   @override
   _NeighborhoodStatisticsPageState createState() =>
       _NeighborhoodStatisticsPageState();
@@ -381,8 +382,8 @@ class _NeighborhoodStatisticsPageState
 
   @override
   void initState() {
-    cityName = widget.sentString;
     super.initState();
+    cityName = widget.sentString;
     _getCityData();
   }
 
@@ -465,6 +466,7 @@ class _NeighborhoodStatisticsPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromRGBO(29, 9, 93, 1.0),
         title: Text('City Details'),
         actions: [
           Padding(
@@ -573,6 +575,7 @@ class _EditFactorsScreenState extends State<EditFactorsScreen> {
         data: MediaQueryData(),
         child: Scaffold(
           appBar: AppBar(
+            backgroundColor: Color.fromRGBO(29, 9, 93, 1.0),
             title: Text('Edit Factors'),
           ),
           body: Padding(

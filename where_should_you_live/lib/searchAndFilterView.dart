@@ -125,7 +125,7 @@ class _SearchPageState extends State<SearchPage> {
           return ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: Material(
-              color: Color.fromARGB(255, 236, 228, 228),
+              color: Color.fromRGBO(232, 221, 252, 1.0),
               elevation: 4,
               child: Builder(
                 builder: (context) {
@@ -263,87 +263,94 @@ class _SearchResultsListViewState extends State<SearchResultsListView> {
           } else if (snapshot.hasData) {
             final cityData = snapshot.data!;
             return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        NeighborhoodStatisticsPage(sentString: cityName),
-                  ),
-                );
+              onTap: () async {
+                final cityData = await _futureCityData;
+                if (cityData != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NeighborhoodStatisticsPage(
+                          key: UniqueKey(), sentString: cityData.fullName),
+                    ),
+                  );
+                }
               },
-              child: LayoutBuilder(
-                builder: (BuildContext context, BoxConstraints constraints) {
-                  return Container(
-                    height: constraints.maxHeight,
-                    child: Card(
-                      color: _isSelected
-                          ? Color.fromARGB(255, 231, 175, 106)
-                          : Color.fromARGB(255, 231, 175, 106),
-                      child: Column(
-                        children: [
-                          Stack(
-                            children: [
-                              Container(
-                                height: 200,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image:
-                                        NetworkImage(cityData.mobileImageLink),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 10,
-                                right: 10,
-                                child: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _isWishlist = !_isWishlist;
-                                    });
-                                  },
-                                  icon: Icon(
-                                    _isWishlist
-                                        ? Icons.favorite
-                                        : Icons.favorite_border,
-                                    color:
-                                        _isWishlist ? Colors.red : Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          ListTile(
-                            title: Row(
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height / 4,
+                child: LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints) {
+                    return Container(
+                      height: constraints.maxHeight / 4,
+                      child: Card(
+                        color: _isSelected
+                            ? Color.fromARGB(255, 231, 175, 106)
+                            : Color.fromARGB(255, 231, 175, 106),
+                        child: Column(
+                          children: [
+                            Stack(
                               children: [
-                                SizedBox(
-                                  width: 200, // set the desired width here
-                                  height: 50, // set the desired height here
-                                  child: Text(
-                                    cityData.fullName,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                Container(
+                                  height: 200,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                          cityData.mobileImageLink),
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 5),
-                                Icon(Icons.star, color: Colors.yellow),
-                                SizedBox(width: 5),
-                                Text(cityData.rating.toStringAsFixed(1)),
+                                Positioned(
+                                  top: 10,
+                                  right: 10,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _isWishlist = !_isWishlist;
+                                      });
+                                    },
+                                    icon: Icon(
+                                      _isWishlist
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      color: _isWishlist
+                                          ? Colors.red
+                                          : Colors.white,
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
-                            onTap: () {
-                              setState(() {
-                                _isSelected = !_isSelected;
-                              });
-                            },
-                          ),
-                        ],
+                            ListTile(
+                              title: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 200, // set the desired width here
+                                    height: 50, // set the desired height here
+                                    child: Text(
+                                      cityData.fullName,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 5),
+                                  Icon(Icons.star, color: Colors.yellow),
+                                  SizedBox(width: 5),
+                                  Text(cityData.rating.toStringAsFixed(1)),
+                                ],
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  _isSelected = !_isSelected;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             );
           } else {
@@ -545,14 +552,17 @@ class _SelectableCardState extends State<SelectableCard2> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) =>
-                NeighborhoodStatisticsPage(sentString: cityName),
-          ),
-        );
+      onTap: () async {
+        final cityData = await _cityDataFuture;
+        if (cityData != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NeighborhoodStatisticsPage(
+                  key: UniqueKey(), sentString: cityData.fullName),
+            ),
+          );
+        }
       },
       child: Card(
         color: _isSelected

@@ -24,6 +24,7 @@ dependencies:
   material_floating_search_bar: ^0.3.7
   image_picker: ^0.8.7+4
   flutter_signin_button: ^2.0.0
+  test: ^1.16.8
   shared_preferences:
 
 dev_dependencies:
