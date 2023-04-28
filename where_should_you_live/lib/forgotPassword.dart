@@ -13,6 +13,7 @@ class ForgotPasswordScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Forgot Password'),
+        backgroundColor: Color.fromRGBO(29, 9, 93, 1.0),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
@@ -51,6 +52,10 @@ class ForgotPasswordScreen extends StatelessWidget {
                     }
                   }
                 },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      Color.fromRGBO(29, 9, 93, 1.0)),
+                ),
                 child: const Text('Reset Password'),
               ),
             ],
