@@ -65,12 +65,21 @@ class _SearchPageState extends State<SearchPage> {
 
   String? selectedTerm;
   late FloatingSearchBarController controller;
+  late SearchResultsListView _searchResultsListView;
 
   @override
   void initState() {
     super.initState();
     controller = FloatingSearchBarController();
     filteredSearchHistory = filterSearchTerms(filter: null);
+    _searchResultsListView = SearchResultsListView(searchTerm: selectedTerm);
+  }
+
+  void updateSelectedTerm(String term) {
+    setState(() {
+      selectedTerm = term;
+      _searchResultsListView = SearchResultsListView(searchTerm: term);
+    });
   }
 
   @override
@@ -86,6 +95,7 @@ class _SearchPageState extends State<SearchPage> {
         controller: controller,
         body: FloatingSearchBarScrollNotifier(
           child: SearchResultsListView(
+            key: UniqueKey(),
             searchTerm: selectedTerm,
           ),
         ),
@@ -210,17 +220,29 @@ class _SearchResultsListViewState extends State<SearchResultsListView> {
     Colors.purple[100]!,
     Colors.teal[100]!,
   ];
-
+  String? _searchTerm;
+  bool _isSelected = false;
+  bool _isWishlist = false;
   @override
   void initState() {
     super.initState();
+    _searchTerm = widget.searchTerm;
     _futureCityData = Future.value(null);
-    if (widget.searchTerm != null) {
-      _futureCityData =
-          CityService().getCityData(widget.searchTerm!.replaceAll(' ', ''));
+    if (_searchTerm != null) {
+      _futureCityData = CityService().getCityData(_searchTerm!.toString());
     }
     items = ExerciseFilter.values;
     filteredItems = items;
+  }
+
+  @override
+  void didUpdateWidget(SearchResultsListView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.searchTerm != oldWidget.searchTerm) {
+      setState(() {
+        _searchTerm = widget.searchTerm;
+      });
+    }
   }
 
   @override
@@ -240,29 +262,89 @@ class _SearchResultsListViewState extends State<SearchResultsListView> {
             );
           } else if (snapshot.hasData) {
             final cityData = snapshot.data!;
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('City data updated')),
-              );
-            });
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  cityData.fullName,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24.0,
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        NeighborhoodStatisticsPage(sentString: cityName),
                   ),
-                ),
-                const SizedBox(height: 16.0),
-                Image.network(
-                  cityData.mobileImageLink,
-                  height: 200.0,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ],
+                );
+              },
+              child: LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  return Container(
+                    height: constraints.maxHeight,
+                    child: Card(
+                      color: _isSelected
+                          ? Color.fromARGB(255, 231, 175, 106)
+                          : Color.fromARGB(255, 231, 175, 106),
+                      child: Column(
+                        children: [
+                          Stack(
+                            children: [
+                              Container(
+                                height: 200,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image:
+                                        NetworkImage(cityData.mobileImageLink),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                top: 10,
+                                right: 10,
+                                child: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _isWishlist = !_isWishlist;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    _isWishlist
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    color:
+                                        _isWishlist ? Colors.red : Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          ListTile(
+                            title: Row(
+                              children: [
+                                SizedBox(
+                                  width: 200, // set the desired width here
+                                  height: 50, // set the desired height here
+                                  child: Text(
+                                    cityData.fullName,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 5),
+                                Icon(Icons.star, color: Colors.yellow),
+                                SizedBox(width: 5),
+                                Text(cityData.rating.toStringAsFixed(1)),
+                              ],
+                            ),
+                            onTap: () {
+                              setState(() {
+                                _isSelected = !_isSelected;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
             );
           } else {
             return GridView.count(
@@ -442,7 +524,6 @@ class _FilterDetailsPageState extends State<FilterDetailsPage> {
 
 class SelectableCard2 extends StatefulWidget {
   final String cityId;
-
   const SelectableCard2({Key? key, required this.cityId}) : super(key: key);
 
   @override
@@ -468,7 +549,8 @@ class _SelectableCardState extends State<SelectableCard2> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => NeighborhoodStatisticsPage(sentString: '',),
+            builder: (context) =>
+                NeighborhoodStatisticsPage(sentString: cityName),
           ),
         );
       },
